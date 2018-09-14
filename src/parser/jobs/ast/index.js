@@ -8,6 +8,7 @@ import DoTs from './DoTs'
 import LucidDreaming from './LucidDreaming'
 import SleeveDraw from './SleeveDraw'
 import Draw from './Draw'
+import HealingBreakdown from './HealingBreakdown'
 
 export default [
 	About,
@@ -20,4 +21,5 @@ export default [
 	Draw,
 	ArcanaTracking,
 	ArcanaSuggestions,
+	HealingBreakdown,
 ]
