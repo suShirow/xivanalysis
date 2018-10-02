@@ -67,7 +67,7 @@ export default class HealingBreakdown extends Module {
 	static displayOrder = 49
 
 	_gcdHistory = new Map()
-	_healingHistory = []
+	_healHistory = []
 
 	constructor(...args) {
 		super(...args)
@@ -83,42 +83,61 @@ export default class HealingBreakdown extends Module {
 			this._logGcdEvent(event)
 		}
 
-		
-
 	}
 
 	_onHeal(event) {
-		// if(GCD_HEALS.includes(actionId)){
-		// 	this.gcd = 
-		// }
+		console.log(event)
+		const actionId = event.ability.guid
+
+		// ogcd gcd hot shield, other mitigation, target based.
+
+		if(event.tick) {
+			
+		}
+
+		if(GCD_HEALS.includes(actionId)){
+			!this._healHistory.has(actionId) && this._healHistory.set(actionId, 0)
+
+			const count = this._healHistory.get(actionId)
+			this._healHistory.set(actionId, count + 1)
+		}
 	}
 
+	// makes a Map of actionIds:uses
 	_logGcdEvent(event) {
 		const actionId = event.ability.guid
 
-		if(!this._gcdHistory.has(actionId)) {
-			this._gcdHistory.set(actionId, 0)
-		} 
+		!this._gcdHistory.has(actionId) && this._gcdHistory.set(actionId, 0)
 
 		const count = this._gcdHistory.get(actionId)
-
 		this._gcdHistory.set(actionId, count + 1)
 
 	}
 
 	_onComplete(event) {
 		// Finalise the history
-
 	}
 
 	output() {
 		const gcdKeys = Array.from(this._gcdHistory.keys())
 
-		const data = {
+		const gcdData = {
 			labels: gcdKeys.map(actionId => getAction(actionId).name),
 			datasets: [{
 				data: Array.from(this._gcdHistory.values()),
 				backgroundColor: gcdKeys.map(actionId => CHART_COLOURS[actionId]),
+			}],
+		}
+
+
+
+		const healKeys = Array.from(this._healHistory.keys())
+
+		const healData = {
+			labels: healKeys.map(actionId => getAction(actionId).name),
+			datasets: [{
+				data: Array.from(this._healHistory.values()),
+				backgroundColor: healKeys.map(actionId => CHART_COLOURS[actionId]),
 			}],
 		}
 
@@ -134,7 +153,7 @@ export default class HealingBreakdown extends Module {
 				<div>
 					<div className={styles.chartWrapper}>
 						<PieChart
-							data={data}
+							data={gcdData}
 							options={options}
 							width={100}
 							height={100}
@@ -168,7 +187,7 @@ export default class HealingBreakdown extends Module {
 				<div>
 					<div className={styles.chartWrapper}>
 						<PieChart
-							data={data}
+							data={healData}
 							options={options}
 							width={100}
 							height={100}
@@ -184,13 +203,13 @@ export default class HealingBreakdown extends Module {
 							</tr>
 						</thead>
 						<tbody>
-							{gcdKeys.map(actionId => <tr key={actionId}>
+							{healKeys.map(actionId => <tr key={actionId}>
 								<td><span
 									className={styles.swatch}
 									style={{backgroundColor: CHART_COLOURS[actionId]}}
 								/></td>
 								<td>{getAction(actionId).name}</td>
-								<td>{this._gcdHistory.get(actionId)}</td>
+								<td>{this._healHistory.get(actionId)}</td>
 								<td></td>
 							</tr>)}
 						</tbody>
