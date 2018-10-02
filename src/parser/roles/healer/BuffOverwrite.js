@@ -6,6 +6,7 @@ import Module from 'parser/core/Module'
 
 /**
    * TODO: Account for AST/SCH shield interactions.
+   * TODO: Make graph of each overwrite event with the amount of uptime lost + people lost on.
  **/
 
 export default class BuffOverwrite extends Module {
@@ -72,13 +73,16 @@ export default class BuffOverwrite extends Module {
 
 		this.addHook('cast', filterSingle, this._onCastSingle)
 
-		// For each cast, check who was effected (healed) and if they had the buff already
+		// For each cast, check who was effected (healed) and if they had the buff already (assumes if a person was healed they will also have the buff applied to them)
 		this.addHook('cast', filterAoe, this._onCastAoe)
-		this.addHook('heal', filterAoe, this._onHealAoe)
+		this.addHook('heal', filterAoe, this._checkBuffApplyInstance)
+
+		// Check refreshbuff instances for aoe again seperatly in case the buff doesn't also heal (won't work on shields if the shield doesn't refresh the buff)
+		this.addHook('refreshbuff', filterAoe, this._checkBuffApplyInstance)
 
 		this.addHook(['applybuff', 'refreshbuff'], filterBuff, this._onApplyBuff)
 		this.addHook('removebuff', filterBuff, this._onRemoveBuff)
-		this.addHook('complete', this._onComplete)
+		this.addHook('complete', this._onSuperComplete)
 
 	}
 
@@ -90,6 +94,17 @@ export default class BuffOverwrite extends Module {
 	}
 	getTotalGCDLost(abilityID) {
 		return this.getInstancesAbilityOverwrite(abilityID).length
+	}
+
+	/**
+	   * @param {number[]} abilityIDs - array of abilityIDs to include in the table.
+	   * @returns {Object} - Table of all buff overwrite instances sorted in chronological order.
+	 **/
+	getTable(abilityIDs) {
+		const instances = _.compact(_.flatten(abilityIDs.map(id => this.getInstancesAbilityOverwrite(id)))
+			.sort((a, b) => b.timestamp - a.timestamp))
+
+		console.log(instances)
 	}
 
 	_onCastSingle(event) {
@@ -133,28 +148,24 @@ export default class BuffOverwrite extends Module {
 		})
 	}
 
-	_onHealAoe(event) {
+	_checkBuffApplyInstance(event) {
 		const targetID = event.targetID
 		const abilityID = event.ability.guid
 		const buffID = this.buffs[abilityID].buff
 		const castInstance = _.last(this.buffOverwrite[abilityID])
 
+		if (!(this._buffsByPlayer.hasOwnProperty(targetID) && this._buffsByPlayer[targetID].hasOwnProperty(buffID) && this._buffsByPlayer[targetID][buffID] !== null)) {
+			return
+		}
+
 		if (castInstance.targets.indexOf(targetID) > -1) {
-			throw castInstance
+			console.error(castInstance)
 		}
 
-		if (this._buffsByPlayer.hasOwnProperty(targetID) && this._buffsByPlayer[targetID].hasOwnProperty(buffID) && this._buffsByPlayer[targetID][buffID] !== null) {
-			const timeDifference = this.buffs[abilityID].duration - (castInstance.timestamp - this._buffsByPlayer[targetID][buffID])
+		const timeDifference = this.buffs[abilityID].duration - (castInstance.timestamp - this._buffsByPlayer[targetID][buffID])
 
-			castInstance.timeLost = Math.max(castInstance.timeLost, timeDifference)
-			castInstance.targets.push(targetID)
-		} else { console.log('duck') }
-	}
-
-	_onRemoveBuff(event) {
-		if (this._buffsByPlayer[event.targetID]) {
-			this._buffsByPlayer[event.targetID][event.ability.guid] = null
-		}
+		castInstance.timeLost = Math.max(castInstance.timeLost, timeDifference)
+		castInstance.targets.push(targetID)
 	}
 
 	_onApplyBuff(event) {
@@ -164,10 +175,15 @@ export default class BuffOverwrite extends Module {
 		this._buffsByPlayer[event.targetID][event.ability.guid] = event.timestamp
 	}
 
-	_onComplete() {
+	_onRemoveBuff(event) {
+		if (this._buffsByPlayer[event.targetID]) {
+			this._buffsByPlayer[event.targetID][event.ability.guid] = null
+		}
+	}
+
+	_onSuperComplete() {
 		Object.keys(this.buffOverwrite).forEach(abilityID => {
 			this.buffOverwrite[abilityID] = this.buffOverwrite[abilityID].filter(obj => obj.timeLost > 0)
 		})
-		console.log(this.buffOverwrite)
 	}
 }
