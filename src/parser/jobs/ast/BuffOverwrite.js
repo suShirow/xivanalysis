@@ -30,7 +30,6 @@ export default class BuffOverwrite extends Module {
 		},
 	}
 
-
 	_buffsByPlayer = {
 		/**
 		   * entityId: {
