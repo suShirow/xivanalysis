@@ -3,6 +3,8 @@ import _ from 'lodash'
 import {i18nMark} from '@lingui/react'
 
 import Module from 'parser/core/Module'
+import ACTIONS from 'data/ACTIONS'
+import STATUSES from 'data/STATUSES'
 
 /**
    * TODO: Account for AST/SCH shield interactions.
@@ -16,14 +18,18 @@ export default class BuffOverwrite extends Module {
 	static dependencies = []
 
 	buffs = {
-		/**
-		  * ACTIONS.ASPECTED_BENEFIC.id: {
-		  *    duration: 30000,
-		  *    buff: STATUSES.ASPECTED_BENEFIC.id,
-		  *    isAoe: false,
-		  * },
-		 **/
+		[ACTIONS.ASPECTED_BENEFIC.id]: {
+			duration: 15000,
+			buff: STATUSES.ASPECTED_BENEFIC.id,
+			isAoe: false,
+		},
+		[ACTIONS.ASPECTED_HELIOS.id]: {
+			duration: 30000,
+			buff: STATUSES.ASPECTED_HELIOS.id,
+			isAoe: true,
+		},
 	}
+
 
 	_buffsByPlayer = {
 		/**
@@ -46,12 +52,12 @@ export default class BuffOverwrite extends Module {
 		 **/
 	}
 
-	constructor(buffs, ...args) {
+	constructor(...args) {
 		super(...args)
 		console.log(...args)
 
 		console.log(this)
-		this.buffs = buffs
+		// this.buffs = buffs
 
 		const filterSingle = {
 			by: 'player',

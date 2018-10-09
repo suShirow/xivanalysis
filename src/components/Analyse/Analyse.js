@@ -153,6 +153,7 @@ class Analyse extends Component {
 		// Look up any modules we might want (inc. core)
 		const modules = {
 			core: AVAILABLE_MODULES.CORE,
+			// role: AVAILABLE_MODULES.ROLES[combatant.type],
 			job: AVAILABLE_MODULES.JOBS[combatant.type],
 			boss: AVAILABLE_MODULES.BOSSES[fight.boss],
 		}

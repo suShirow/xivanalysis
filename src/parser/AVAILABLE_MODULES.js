@@ -4,6 +4,12 @@ import JOBS from 'data/JOBS'
 export default {
 	CORE: () => import('./core/modules' /* webpackChunkName: "core" */),
 
+	ROLES: {
+		[JOBS.WHITE_MAGE.logType]: () => import('./roles/healer' /* webpackChunkName: "roles-whm" */),
+		[JOBS.SCHOLAR.logType]: () => import('./roles/healer' /* webpackChunkName: "roles-sch" */),
+		[JOBS.ASTROLOGIAN.logType]: () => import('./roles/healer' /*webpackChunkName: "roles-ast" */),
+	},
+
 	JOBS: {
 		[JOBS.MONK.logType]: () => import('./jobs/mnk' /* webpackChunkName: "jobs-mnk" */),
 		[JOBS.NINJA.logType]: () => import('./jobs/nin' /* webpackChunkName: "jobs-nin" */),

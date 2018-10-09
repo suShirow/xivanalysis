@@ -9,6 +9,7 @@ import DoTs from './DoTs'
 import LucidDreaming from './LucidDreaming'
 import SleeveDraw from './SleeveDraw'
 import Draw from './Draw'
+import BuffOverwrite from './BuffOverwrite'
 
 export default [
 	About,
@@ -22,4 +23,5 @@ export default [
 	Draw,
 	ArcanaTracking,
 	ArcanaSuggestions,
+	BuffOverwrite,
 ]
