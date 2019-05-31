@@ -21,7 +21,7 @@ export default class Combust extends DoTs {
 	static handle = 'combust'
 
 	static statusesToTrack = [
-		STATUSES.COMBUST_II.id,
+		STATUSES.COMBUST_III.id,
 	]
 
 	@dependency private checklist!: Checklist
@@ -36,8 +36,8 @@ export default class Combust extends DoTs {
 			target: 90,
 			requirements: [
 				new Requirement({
-					name: <Trans id="ast.dots.requirement.uptime.name"><ActionLink {...ACTIONS.COMBUST_II} /> uptime</Trans>,
-					percent: () => this.getUptimePercent(STATUSES.COMBUST_II.id),
+					name: <Trans id="ast.dots.requirement.uptime.name"><ActionLink {...ACTIONS.COMBUST_III} /> uptime</Trans>,
+					percent: () => this.getUptimePercent(STATUSES.COMBUST_III.id),
 				}),
 			],
 		}))
@@ -46,15 +46,15 @@ export default class Combust extends DoTs {
 	addClippingSuggestions(clip: TODO) {
 		// Suggestion for DoT clipping
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.COMBUST_II.icon,
+			icon: ACTIONS.COMBUST_III.icon,
 			content: <Trans id="ast.dots.suggestion.clip.content">
-					Avoid refreshing <ActionLink {...ACTIONS.COMBUST_II} /> significantly before it expires.
+					Avoid refreshing <ActionLink {...ACTIONS.COMBUST_III} /> significantly before it expires.
 				</Trans>,
 			why: <Trans id="ast.dots.suggestion.clip.why">
-						{this.parser.formatDuration(clip[STATUSES.COMBUST_II.id])} of <StatusLink {...STATUSES.COMBUST_II}/> lost to early refreshes.
+						{this.parser.formatDuration(clip[STATUSES.COMBUST_III.id])} of <StatusLink {...STATUSES.COMBUST_III}/> lost to early refreshes.
 					</Trans>,
 			tiers: SEVERITIES.CLIPPING,
-			value: this.getClippingAmount(STATUSES.COMBUST_II.id),
+			value: this.getClippingAmount(STATUSES.COMBUST_III.id),
 		}))
 	}
 

@@ -42,7 +42,6 @@ export default class LIGHTSPEED extends Module {
 			abilityId: STATUSES.LIGHTSPEED.id,
 		}
 		this.addHook('applybuff', lsBuffFilter, this._onApplyLightspeed)
-		this.addHook('refreshbuff', lsBuffFilter, this._onRefreshLightspeed)
 		this.addHook('removebuff', lsBuffFilter, this._onRemoveLightspeed)
 
 		this.addHook('complete', this._onComplete)
@@ -69,11 +68,6 @@ export default class LIGHTSPEED extends Module {
 		// If we're not active at this point, they started the fight with LIGHTSPEED up. Clean up the mess.
 		if (this._active) { return }
 		this._startLightspeed(event.timestamp)
-	}
-
-	_onRefreshLightspeed() {
-		if (!this._active) { return }
-		this._lightspeed.extended = true
 	}
 
 	_onRemoveLightspeed() {
@@ -145,7 +139,6 @@ export default class LIGHTSPEED extends Module {
 						{this.parser.formatTimestamp(lightspeed.start)}
 						&nbsp;-&nbsp;<Trans id="ast.lightspeed.rotation.gcd"><Plural value={numGcds} one="# GCD" other="# GCDs"/></Trans>
 						&nbsp;-&nbsp;{mpSavings} <Trans id="ast.lightspeed.rotation.mp-saved">MP saved</Trans>
-						{lightspeed.extended && <span className="text-info">&nbsp;<Trans id="ast.lightspeed.rotation.extended">(extended)</Trans></span>}
 					</>,
 				},
 				content: {
@@ -164,9 +157,9 @@ export default class LIGHTSPEED extends Module {
 		return <Fragment>
 			<p>
 				<Trans id="ast.lightspeed.messages.explanation">
-				Some of the applications of <ActionLink {...ACTIONS.LIGHTSPEED} /> include MP savings on heavy healing segments, keeping casts up while on the move and for weaving OGCDs.
-				To further complicate usage, <ActionLink {...ACTIONS.ESSENTIAL_DIGNITY} /> can reduce the cooldown, and the buff can be extended by <ActionLink {...ACTIONS.CELESTIAL_OPPOSITION} />.<br/><br/>
-				At this point of time it's difficult to identify what is optimal, since each fight calls for a different strategy.
+				Some of the applications of <ActionLink {...ACTIONS.LIGHTSPEED} /> include MP savings on heavy healing segments and keeping casts up while on the move and for weaving OGCDs.
+					<ActionLink {...ACTIONS.ESSENTIAL_DIGNITY} /> can reduce the cooldown, and sometimes you'd hold onto it to align with specific scenarios.<br/><br/>
+				Each fight calls for a different strategy, but try to utilize it as much as possible!
 				</Trans>
 			</p>
 			{panels.length === 0 && noCastsMessage}

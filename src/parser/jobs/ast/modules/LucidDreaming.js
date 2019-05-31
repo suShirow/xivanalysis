@@ -6,7 +6,7 @@ import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {ActionLink} from 'components/ui/DbLink'
 import {Plural, Trans} from '@lingui/react'
-import {TieredRule, Requirement, TARGET} from 'parser/core/modules/Checklist'
+// import {TieredRule, Requirement, TARGET} from 'parser/core/modules/Checklist'
 
 const WASTED_USES_MAX_MEDIUM = 2
 // const MP_NEEDS_REFRESH_THRESHOLD = 0.80
@@ -18,7 +18,6 @@ const WASTED_USES_MAX_MEDIUM = 2
 export default class LucidDreaming extends Module {
 	static handle = 'lucid'
 	static dependencies = [
-		'checklist',
 		// 'combatants',
 		'suggestions',
 	]
@@ -115,28 +114,6 @@ export default class LucidDreaming extends Module {
 		// console.log(this.parser.formatDuration(holdDuration))
 		const _usesMissed = Math.floor(holdDuration / (ACTIONS.LUCID_DREAMING.cooldown * 1000))
 		// console.log('no mp: ' + this._gcdCountHoldingLucid)
-		const warnTarget = (this._uses - 1) / this._uses * 100
-		const failTarget = (this._uses - 2) / this._uses * 100
-
-		this.checklist.add(new TieredRule({
-			name: <Trans id="ast.lucid-dreaming.checklist.name">
-				Extend Lucid Dreaming
-			</Trans>,
-			description: <Trans id="ast.lucid-dreaming.checklist.content">
-				Astrologians have a very low MP pool, due to the high cost of their healing spells. If they adhere to "Always be casting" they frequently
-				find themselves desiring more MP. It's important to extend all casts of Lucid Dreaming with <ActionLink {...ACTIONS.CELESTIAL_OPPOSITION} /> to maximize MP benefits.
-			</Trans>,
-			tiers: {[warnTarget]: TARGET.WARN, [failTarget]: TARGET.FAIL, 100: TARGET.SUCCESS},
-			requirements: [
-				new Requirement({
-					name: <Trans id="ast.lucid-dreaming.checklist.requirement.name">
-						<ActionLink {...ACTIONS.LUCID_DREAMING} /> extensions
-					</Trans>,
-					value: this._extensions,
-					target: this._uses,
-				}),
-			],
-		}))
 
 		if (_usesMissed > 1 || this._uses === 0) {
 			this.suggestions.add(new Suggestion({
@@ -169,23 +146,6 @@ export default class LucidDreaming extends Module {
 		// 		</Fragment>,
 		// 	}))
 		// }
-
-		// Checklist that they extended all their lucids
-		// this.checklist.add(new Rule({
-		// 	name: 'Extend Lucid Dreaming',
-		// 	description: <Fragment>
-		// 		<Trans id="ast.lucid-dreaming.checklist.content">
-		// 		Astrologians have a very low MP pool, due to the high cost of their healing spells. If they adhere to "Always be casting" they frequently
-		// 		find themselves desiring more MP. It's important to extend all casts of Lucid Dreaming with <ActionLink {...ACTIONS.CELESTIAL_OPPOSITION} /> to maximize MP benefits.
-		// 		</Trans>
-		// 	</Fragment>,
-		// 	requirements: [
-		// 		new Requirement({
-		// 			name: <Fragment><ActionLink {...ACTIONS.LUCID_DREAMING} /> extensions</Fragment>,
-		// 			percent: () => this._uses > 0 ? (this._extensions/this._uses) * 100 : 0,
-		// 		}),
-		// 	],
-		// }))
 
 	}
 
