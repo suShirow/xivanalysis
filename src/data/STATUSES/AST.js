@@ -6,6 +6,12 @@ export default {
 		icon: 'https://xivapi.com/i/013000/013214.png',
 	},
 
+	COMBUST_III: {
+		id: 843,
+		name: 'Combust III',
+		icon: 'https://xivapi.com/i/013000/013214.png',
+	},
+
 	ASPECTED_BENEFIC: {
 		id: 835,
 		name: 'Aspected Benefic',

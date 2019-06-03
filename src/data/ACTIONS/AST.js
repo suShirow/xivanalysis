@@ -46,7 +46,27 @@ export default {
 		mpCost: 600,
 	},
 
+	MALEFIC_IV: {
+		id: 7442,
+		name: 'Malefic IV',
+		icon: 'https://xivapi.com/i/003000/003145.png',
+		onGcd: true,
+		castTime: 1.5,
+		mpCostFactor: 5,
+		mpCost: 600,
+	},
+
 	COMBUST_II: {
+		id: 3608,
+		name: 'Combust II',
+		icon: 'https://xivapi.com/i/003000/003125.png',
+		onGcd: true,
+		castTime: 0,
+		mpCostFactor: 5,
+		mpCost: 600,
+	},
+
+	COMBUST_III: {
 		id: 3608,
 		name: 'Combust II',
 		icon: 'https://xivapi.com/i/003000/003125.png',
@@ -210,6 +230,40 @@ export default {
 		name: 'Sleeve Draw',
 		icon: 'https://xivapi.com/i/003000/003107.png',
 		cooldown: 120,
+	},
+
+	// ----
+	// SHB
+	// ----
+
+	HOROSCOPE: {
+		id: 1,
+		name: 'Horoscope',
+		icon: 'https://xivapi.com/i/003000/003126.png',
+	},
+
+	NEUTRAL_SECT: {
+		id: 1,
+		name: 'Neutral Sect',
+		icon: 'https://xivapi.com/i/003000/003126.png',
+	},
+
+	DIVINATION: {
+		id: 1,
+		name: 'Divination',
+		icon: 'https://xivapi.com/i/003000/003126.png',
+	},
+
+	CELESTIAL_INTERSECTION: {
+		id: 1,
+		name: 'Celestial Intersection',
+		icon: 'https://xivapi.com/i/003000/003126.png',
+	},
+
+	PLAY: {
+		id: 1,
+		name: 'Play',
+		icon: 'https://xivapi.com/i/003000/003126.png',
 	},
 
 	// -----
