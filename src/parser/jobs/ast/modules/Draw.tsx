@@ -6,12 +6,12 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
+import CooldownDowntime from 'parser/core/modules/CooldownDowntime'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import Cooldowns from 'parser/jobs/mch/modules/Cooldowns'
 import React from 'react'
 // import {DRAWN_ARCANA_USE} from './ArcanaGroups'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
-import Cooldowns from 'parser/jobs/mch/modules/Cooldowns';
-import CooldownDowntime from 'parser/core/modules/CooldownDowntime';
 
 // THINGS TO TRACK:
 // Whether they used draw prepull (check how soon they played and then drew again)
@@ -128,36 +128,36 @@ export default class Draw extends Module {
 		}))
 
 		// Didn't keep draw on cooldown
-		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.DRAW.icon,
-			content: <Trans id="ast.draw.suggestions.cards.content">
-				Keep Draw on cooldown
-			</Trans>,
-			why: <Trans id="ast.draw.suggestions.cards.why">
-				<Plural value={drawUsesMissedFromCardsRounded} one="# Draw" other="# Draws" />
-					lost.
-			</Trans>,
-			tiers: CARD_LOSS_SEVERITY,
-			value: drawUsesMissedFromCardsRounded,
-		}))
+		// this.suggestions.add(new TieredSuggestion({
+		// 	icon: ACTIONS.DRAW.icon,
+		// 	content: <Trans id="ast.draw.suggestions.cards.content">
+		// 		Keep Draw on cooldown
+		// 	</Trans>,
+		// 	why: <Trans id="ast.draw.suggestions.cards.why">
+		// 		<Plural value={drawUsesMissedFromCardsRounded} one="# Draw" other="# Draws" />
+		// 			lost.
+		// 	</Trans>,
+		// 	tiers: CARD_LOSS_SEVERITY,
+		// 	value: drawUsesMissedFromCardsRounded,
+		// }))
 
 		// const drawUsesMissedFromSleeve = ((sleeveHoldDuration - this._excusedDrawTimeLossFromSleeve) / (ACTIONS.DRAW.cooldown * 1000))
 		// const drawUsesMissedFromSleeveRounded = Math.floor(drawUsesMissedFromSleeve)
 
 		// Sleevedraw overwrote draw or not right after draw.
-		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.SLEEVE_DRAW.icon,
-			content: <Trans id="ast.sleeve-draw.suggestions.draw.content">
-					<ActionLink {...ACTIONS.SLEEVE_DRAW} /> restarts the cooldown on <ActionLink {...ACTIONS.DRAW} />,
-					so it is better to use it right after a Draw.
-			</Trans>,
-			why: <Trans id="ast.sleeve-draw.suggestions.draw.why">
-				<Plural value={drawUsesMissedFromSleeveRounded} one="# Draw" other="# Draws" />
-					lost by having their cooldowns reset by Sleeve Draw.
-			</Trans>,
-			tiers: CARD_LOSS_SEVERITY,
-			value: drawUsesMissedFromSleeveRounded,
-		}))
+		// this.suggestions.add(new TieredSuggestion({
+		// 	icon: ACTIONS.SLEEVE_DRAW.icon,
+		// 	content: <Trans id="ast.sleeve-draw.suggestions.draw.content">
+		// 			<ActionLink {...ACTIONS.SLEEVE_DRAW} /> restarts the cooldown on <ActionLink {...ACTIONS.DRAW} />,
+		// 			so it is better to use it right after a Draw.
+		// 	</Trans>,
+		// 	why: <Trans id="ast.sleeve-draw.suggestions.draw.why">
+		// 		<Plural value={drawUsesMissedFromSleeveRounded} one="# Draw" other="# Draws" />
+		// 			lost by having their cooldowns reset by Sleeve Draw.
+		// 	</Trans>,
+		// 	tiers: CARD_LOSS_SEVERITY,
+		// 	value: drawUsesMissedFromSleeveRounded,
+		// }))
 
 		// Didn't use sleeve draw
 		this.suggestions.add(new TieredSuggestion({
