@@ -10,19 +10,24 @@ import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Sugge
 import React from 'react'
 // import {DRAWN_ARCANA_USE} from './ArcanaGroups'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
+import Cooldowns from 'parser/jobs/mch/modules/Cooldowns';
+import CooldownDowntime from 'parser/core/modules/CooldownDowntime';
 
 // THINGS TO TRACK:
 // Whether they used draw prepull (check how soon they played and then drew again)
-// perhaps go for 11 out of 10 plays used, since prepull draw can be iffy and optional?
+// perhaps go for displaying 11 out of 10 plays used, since prepull draw can be iffy?
 
 const CARD_DURATION = 1500
-const TIME_TO_PLAY_THRICE = 7000
+const TIME_TO_PLAY_THRICE = 7500
+// const POST_SLEVE_EXCUSED_DRAW_DRIFT = 5000
 
 export default class Draw extends Module {
 	static handle = 'draw'
 	static title = t('ast.draw.title')`Draw`
 	// static displayOrder = DISPLAY_ORDER.DRAW
 
+	@dependency private cooldowns!: Cooldowns
+	@dependency private cooldownDownTime!: CooldownDowntime
 	@dependency private checklist!: Checklist
 	@dependency private suggestions!: Suggestions
 
@@ -30,14 +35,17 @@ export default class Draw extends Module {
 	_draws = 0
 	_drawDrift = 0
 	_drawTotalDrift = 0
+	_sleeveStacks: 0 | 1 | 2 = 0
 
 	_plays = 0
 
 	protected init() {
 		const drawFilter = {by: 'player', abilityId: ACTIONS.DRAW.id}
+		const sleeveFilter = {by: 'player', abilityId: ACTIONS.SLEEVE_DRAW.id}
 		const playFilter = {by: 'player', abilityId: ACTIONS.PLAY.id}
 
 		this.addHook('cast', drawFilter, this._onDraw)
+		this.addHook('cast', sleeveFilter, this._onSleeveDraw)
 		this.addHook('cast', playFilter, this._onPlay)
 
 		// this.addHook('applybuff', lsBuffFilter, this._onApplyLightspeed)
@@ -51,11 +59,19 @@ export default class Draw extends Module {
 		if (this._draws === 1) {
 			// The first use, take holding as from the first minute of the fight
 			this._drawDrift = event.timestamp - this.parser.fight.start_time
+
+		} else if (this._sleeveStacks > 0) {
+			this._sleeveStacks--
+			this.cooldowns.resetCooldown(ACTIONS.DRAW.id)
+
+			// Take holding as the time from last draw
+			this._drawDrift = event.timestamp - this._lastDrawTimestamp
 		} else {
 			// Take holding as from the time it comes off cooldown
 			this._drawDrift = event.timestamp - this._lastDrawTimestamp - (ACTIONS.DRAW.cooldown * 1000)
 		}
 
+		// Keep track of total drift time not using Draw
 		if (this._drawDrift > 0) {
 			this._drawTotalDrift += this._drawDrift
 		}
@@ -64,8 +80,13 @@ export default class Draw extends Module {
 		this._lastDrawTimestamp = event.timestamp
 	}
 
-	private _onPlay(event) {
+	private _onPlay() {
 		this._plays++
+	}
+
+	private _onSleeveDraw() {
+		this.cooldowns.resetCooldown(ACTIONS.DRAW.id)
+		this._sleeveStacks = 2
 	}
 
 	private _onComplete() {
@@ -81,8 +102,8 @@ export default class Draw extends Module {
 
 		// Begin Theoretical Max Plays calc
 		const fightDuration = this.parser.fight.end_time - this.parser.fight.start_time
-		const playsFromSleeveDraw = Math.floor((fightDuration - CARD_DURATION - TIME_TO_PLAY_THRICE) / ACTIONS.SLEEVE_DRAW.cooldown)
-		const theoreticalMaxPlays = Math.floor((fightDuration - CARD_DURATION) / ACTIONS.DRAW.cooldown) + playsFromSleeveDraw + 1
+		const playsFromSleeveDraw = Math.floor((fightDuration - CARD_DURATION - TIME_TO_PLAY_THRICE) / (ACTIONS.SLEEVE_DRAW.cooldown * 1000))
+		const theoreticalMaxPlays = Math.floor((fightDuration - CARD_DURATION) / (ACTIONS.DRAW.cooldown * 1000)) + playsFromSleeveDraw + 1
 		// TODO: Include downtime calculation for each fight??
 
 		// Number of cards played
@@ -107,7 +128,6 @@ export default class Draw extends Module {
 		}))
 
 		// Didn't keep draw on cooldown
-
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.DRAW.icon,
 			content: <Trans id="ast.draw.suggestions.cards.content">

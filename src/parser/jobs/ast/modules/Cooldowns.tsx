@@ -3,6 +3,7 @@ import CoreCooldowns from 'parser/core/modules/Cooldowns'
 
 export default class Cooldowns extends CoreCooldowns {
 	static cooldownOrder = [
+		ACTIONS.DRAW.id,
 		// oGCD ST heals
 		ACTIONS.ESSENTIAL_DIGNITY.id,
 		ACTIONS.CELESTIAL_INTERSECTION.id,
