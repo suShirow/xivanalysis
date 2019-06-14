@@ -5,7 +5,8 @@ import {Accordion} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 // import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
@@ -13,7 +14,7 @@ import Module from 'parser/core/Module'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const LIGHTSPEED_CAST_TIME_MOD = -2.5
-// const LIGHTSPEED_LENGTH = 10000
+// const LIGHTSPEED_LENGTH = 15000
 
 export default class LIGHTSPEED extends Module {
 	static handle = 'lightspeed'
@@ -43,7 +44,6 @@ export default class LIGHTSPEED extends Module {
 		}
 		this.addHook('applybuff', lsBuffFilter, this._onApplyLightspeed)
 		this.addHook('removebuff', lsBuffFilter, this._onRemoveLightspeed)
-
 		this.addHook('complete', this._onComplete)
 	}
 
@@ -56,7 +56,8 @@ export default class LIGHTSPEED extends Module {
 		}
 
 		// Only going to save casts during LIGHTSPEED
-		if (!this._active || getAction(actionId).autoAttack) {
+		const action = getDataBy(ACTIONS, 'id', actionId)
+		if (!this._active || !action || action.autoAttack) {
 			return
 		}
 
@@ -87,7 +88,6 @@ export default class LIGHTSPEED extends Module {
 		this._lightspeed = {
 			start,
 			end: null,
-			extended: false,
 			casts: [],
 		}
 
@@ -121,15 +121,17 @@ export default class LIGHTSPEED extends Module {
 	output() {
 		const noCastsMessage = <Fragment>
 			<p>
-				<span className="text-error"><Trans id="ast.lightspeed.messages.no-casts">Zero casts recorded for <ActionLink {...ACTIONS.LIGHTSPEED} /></Trans></span>
+				<span className="text-error"><Trans id="ast.lightspeed.messages.no-casts">There were no casts recorded for <ActionLink {...ACTIONS.LIGHTSPEED} /></Trans></span>
 			</p>
 		</Fragment>
 
 		const panels = this._history.map(lightspeed => {
-			const numGcds = lightspeed.casts.filter(cast => getAction(cast.ability.guid).onGcd).length
-			const mpSavings = lightspeed.casts
-				.filter(cast => getAction(cast.ability.guid).onGcd)
-				.reduce((totalSavings, cast) => getAction(cast.ability.guid).mpCost / 2 + totalSavings, 0)
+			const gcdActions = lightspeed.casts
+				.map(cast => getDataBy(ACTIONS, 'id', cast.ability.guid))
+				.filter(action => action && action.onGcd)
+			const numGcds = gcdActions.length
+			const mpSavings = gcdActions
+				.reduce((totalSavings, action) => action.mpCost / 2 + totalSavings, 0)
 			// TODO: Use mpCostFactor instead of mpCost to be level agnostic
 
 			return {

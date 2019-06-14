@@ -1,5 +1,14 @@
 ## Things the AST page might want to track
 
+## 5.0 edition
+
+### Draw
+* [ ] Checklist: Number of cards played over theoretical max (with leeway and downtime?)
+* [ ] Suggestion: Draw is kept on CD
+* [ ] Checklist: Divination use over theoretical max given the cards tracked
+* [ ] Card tracking
+
+========================================================================
 DoTs
 * [?] combust uptime
 

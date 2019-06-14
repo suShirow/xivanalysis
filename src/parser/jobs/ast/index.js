@@ -40,23 +40,13 @@ export default new Meta({
 			</Message.Content>
 		</Message>
 	</>,
-	supportedPatches: {
-		from: '5.0',
-		to: '5.0',
-	},
+	// supportedPatches: {
+	// 	from: '4.3',
+	// 	to: '4.5',
+	// },
 	contributors: [
 		{user: CONTRIBUTORS.SUSHIROU, role: 'Maintainer'},
 	],
 	changelog: [
-		{
-			date: new Date('2019-06-14'),
-			Changes: () => 'Updated for Shadowbringers',
-			contributors: [CONTRIBUTORS.SUSHIROU],
-		},
-		{
-			date: new Date('2019-04-09'),
-			Changes: () => 'Added a link in Arcana Logs that will jump to timeline, and a button that jumps back to top. Also made the Minor Arcana icons consistent.',
-			contributors: [CONTRIBUTORS.SUSHIROU],
-		},
 	],
 })

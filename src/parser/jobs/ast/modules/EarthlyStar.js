@@ -17,7 +17,7 @@ const UNCOOKED_SEVERITY = {
 
 export default class EarthlyStar extends Module {
 	static handle = 'earthlystar'
-	static title = t('ast.earthly-star.title')`'Earthly Star'`
+	static title = t('ast.earthly-star.title')`Earthly Star`
 	static dependencies = [
 		'suggestions',
 	]

@@ -5,8 +5,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003126.png',
 		onGcd: true,
 		castTime: 2,
-		mpCostFactor: 4,
-		mpCost: 480,
+		mpCost: 400,
 	},
 
 	BENEFIC_II: {
@@ -15,8 +14,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003128.png',
 		onGcd: true,
 		castTime: 2,
-		mpCostFactor: 9,
-		mpCost: 1080,
+		mpCost: 900,
 	},
 
 	ASCEND: {
@@ -25,8 +23,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003132.png',
 		onGcd: true,
 		castTime: 8,
-		mpCostFactor: 30,
-		mpCost: 3600,
+		mpCost: 2400,
 	},
 
 	LIGHTSPEED: {
@@ -42,8 +39,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003145.png',
 		onGcd: true,
 		castTime: 1.5,
-		mpCostFactor: 5,
-		mpCost: 600,
+		mpCost: 400,
 	},
 
 	MALEFIC_IV: {
@@ -52,8 +48,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003145.png',
 		onGcd: true,
 		castTime: 1.5,
-		mpCostFactor: 5,
-		mpCost: 600,
+		mpCost: 400,
 	},
 
 	COMBUST_II: {
@@ -62,8 +57,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003125.png',
 		onGcd: true,
 		castTime: 0,
-		mpCostFactor: 5,
-		mpCost: 600,
+		mpCost: 500,
 	},
 
 	COMBUST_III: {
@@ -72,8 +66,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003125.png',
 		onGcd: true,
 		castTime: 0,
-		mpCostFactor: 5,
-		mpCost: 600,
+		mpCost: 400,
 	},
 
 	GRAVITY: {
@@ -82,8 +75,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003123.png',
 		onGcd: true,
 		castTime: 3,
-		mpCostFactor: 16,
-		mpCost: 1920,
+		mpCost: 700,
 	},
 
 	ESSENTIAL_DIGNITY: {
@@ -99,8 +91,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003130.png',
 		onGcd: true,
 		castTime: 2.5,
-		mpCostFactor: 15,
-		mpCost: 1800,
+		mpCost: 1200,
 	},
 
 	ASPECTED_BENEFIC: {
@@ -109,8 +100,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003127.png',
 		onGcd: true,
 		castTime: 0,
-		mpCostFactor: 12,
-		mpCost: 1440,
+		mpCost: 500,
 	},
 
 	HELIOS: {
@@ -119,8 +109,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003129.png',
 		onGcd: true,
 		castTime: 2.5,
-		mpCostFactor: 12,
-		mpCost: 1440,
+		mpCost: 900,
 	},
 
 	SYNASTRY: {

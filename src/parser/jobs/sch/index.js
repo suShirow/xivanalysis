@@ -32,17 +32,14 @@ export default new Meta({
 			</Message.Content>
 		</Message>
 	</>,
-	supportedPatches: {
-		from: '4.3',
-		to: '4.5',
-	},
+	// supportedPatches: {
+	// 	from: '4.3',
+	// 	to: '4.5',
+	// },
 	contributors: [
 		{user: CONTRIBUTORS.LIMA, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.DEVELOPER},
 	],
-	changelog: [{
-		date: new Date('2019-04-22'),
-		Changes: () => 'Added support for translations.',
-		contributors: [CONTRIBUTORS.SUSHIROU],
-	}],
+	changelog: [
+	],
 })

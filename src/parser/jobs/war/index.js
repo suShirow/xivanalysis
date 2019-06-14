@@ -23,49 +23,14 @@ export default new Meta({
 			</Message.Content>
 		</Message>
 	</>,
-	supportedPatches: {
-		from: '4.2',
-		to: '4.5',
-	},
+	// supportedPatches: {
+	// 	from: '4.2',
+	// 	to: '4.5',
+	// },
 	contributors: [
 		{user: CONTRIBUTORS.SAYAKA, role: ROLES.MAINTAINER},
 	],
 
 	changelog: [
-		{
-			date: new Date('2018-07-21'),
-			Changes: () => 'Initial release of the Warrior module.',
-			contributors: [CONTRIBUTORS.SAYAKA],
-		},
-		{
-			date: new Date('2018-07-24'),
-			Changes: () => 'Fixed Gauge calculation and added 5-GCD IR Usage timeline and warnings.',
-			contributors: [CONTRIBUTORS.SAYAKA],
-		},
-		{
-			date: new Date('2018-07-27'),
-			Changes: () => 'Added the Storm\'s Eye Module, and added the check if you\'re ending the fight inside of IR, it won\'t complain, but will still show your \'mistake\'. The rage suggestions were also changed into \'tiers\', instead of just a single suggestion. And the severity on them were rebalanced.',
-			contributors: [CONTRIBUTORS.SAYAKA],
-		},
-		{
-			date: new Date('2018-08-09'),
-			Changes: () => 'Added a graph to show your rage usage across the entire fight.',
-			contributors: [CONTRIBUTORS.SAYAKA],
-		},
-		{
-			date: new Date('2018-08-30'),
-			Changes: () => 'Hotfixed gauge lost upon death being added to the wasted gauge.',
-			contributors: [CONTRIBUTORS.SAYAKA],
-		},
-		{
-			date: new Date('2018-10-02'),
-			Changes: () => 'Localization support was added to the Warrior module.',
-			contributors: [CONTRIBUTORS.SAYAKA],
-		},
-		{
-			date: new Date('2018-10-10'),
-			Changes: () => 'Gauge module rewritten (mostly back-end changes -- Should be more accurate now), and missed combos suggestion is now supported and working.',
-			contributors: [CONTRIBUTORS.SAYAKA],
-		},
 	],
 })
