@@ -1,19 +1,15 @@
-import {t} from '@lingui/macro'
-import {Trans} from '@lingui/react'
-import React from 'react'
-import {Icon, Message} from 'semantic-ui-react'
-import {ActionLink} from 'components/ui/DbLink'
-import ACTIONS from 'data/ACTIONS'
-
+import { t } from '@lingui/macro'
+import { Trans } from '@lingui/react'
+import { ActionLink } from 'components/ui/DbLink'
 import TransMarkdown from 'components/ui/TransMarkdown'
-
-import CONTRIBUTORS from 'data/CONTRIBUTORS'
-import {Meta} from 'parser/core/Meta'
+import ACTIONS from 'data/ACTIONS'
+import CONTRIBUTORS, { ROLES } from 'data/CONTRIBUTORS'
+import { Meta } from 'parser/core/Meta'
+import React from 'react'
+import { Icon, Message } from 'semantic-ui-react'
 
 const description = t('ast.about.description-2')`
 Playing any healer requires you to carefully manage your MP and cooldowns to efficiently keep your party alive. If you plan out your heals and communicate with your co-healer, you will naturally end up putting out more DPS with the extra GCDs gained.
-
-This tool displays the usual uptime and gcd recommendations. It also gives a simple print-out for buffs you've extended and the card actions you've made.
 `
 
 export default new Meta({
@@ -27,7 +23,7 @@ export default new Meta({
 			<Icon name="warning sign" />
 			<Message.Content>
 				<Trans id="ast.about.description.warning.development">
-                There's still lots more work to be done for this tool to be comprehensive! If you have a suggestion for what is worth tracking
+				There's still lots more work to be done for this tool to be comprehensive! If you have a suggestion for what is worth tracking
 				please pop by our Discord channel!</Trans>
 			</Message.Content>
 		</Message>
@@ -45,8 +41,19 @@ export default new Meta({
 	// 	to: '4.5',
 	// },
 	contributors: [
-		{user: CONTRIBUTORS.SUSHIROU, role: 'Maintainer'},
+		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.MAINTAINER},
 	],
 	changelog: [
+		{
+			date: new Date('2019-06-28'),
+			Changes: () => <>
+				<strong>Support for Shadowbringers</strong>:
+				<ul>
+					<li>Uptime checks for <ActionLink {...ACTIONS.DRAW}/>, <ActionLink {...ACTIONS.PLAY}/>, <ActionLink {...ACTIONS.SLEEVE_DRAW}/>.</li>
+					<li></li>
+				</ul>
+			</>,
+			contributors: [CONTRIBUTORS.SUSHIROU],
+		}
 	],
 })

@@ -1,17 +1,15 @@
-import {t} from '@lingui/macro'
-import {Plural, Trans} from '@lingui/react'
-import {ActionLink} from 'components/ui/DbLink'
-import {getDataBy} from 'data'
+import { t } from '@lingui/macro'
+import { Plural, Trans } from '@lingui/react'
+import { ActionLink } from 'components/ui/DbLink'
+// import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
-import Module, {dependency} from 'parser/core/Module'
-import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
-import CooldownDowntime from 'parser/core/modules/CooldownDowntime'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import { CastEvent } from 'fflogs'
+// import STATUSES from 'data/STATUSES'
+import Module, { dependency } from 'parser/core/Module'
+import Checklist, { Requirement, TARGET, TieredRule } from 'parser/core/modules/Checklist'
+import Suggestions, { SEVERITY, TieredSuggestion } from 'parser/core/modules/Suggestions'
 import Cooldowns from 'parser/jobs/mch/modules/Cooldowns'
 import React from 'react'
-// import {DRAWN_ARCANA_USE} from './ArcanaGroups'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // THINGS TO TRACK:
 // Whether they used draw prepull (check how soon they played and then drew again)
@@ -19,15 +17,25 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const CARD_DURATION = 1500
 const TIME_TO_PLAY_THRICE = 7500
-// const POST_SLEVE_EXCUSED_DRAW_DRIFT = 5000
+
+const SEVERITIES = {
+	CARD_HOLDING: {
+		15000: SEVERITY.MINOR,
+		45000: SEVERITY.MEDIUM,
+		60000: SEVERITY.MAJOR,
+	},
+	SLEEVE_DRAW_OVERWRITE: {
+		15000: SEVERITY.MINOR,
+		45000: SEVERITY.MEDIUM,
+		60000: SEVERITY.MAJOR,
+	}
+}
 
 export default class Draw extends Module {
 	static handle = 'draw'
 	static title = t('ast.draw.title')`Draw`
-	// static displayOrder = DISPLAY_ORDER.DRAW
 
 	@dependency private cooldowns!: Cooldowns
-	@dependency private cooldownDownTime!: CooldownDowntime
 	@dependency private checklist!: Checklist
 	@dependency private suggestions!: Suggestions
 
@@ -35,25 +43,22 @@ export default class Draw extends Module {
 	_draws = 0
 	_drawDrift = 0
 	_drawTotalDrift = 0
-	_sleeveStacks: 0 | 1 | 2 = 0
 
 	_plays = 0
 
+	_sleeveStacks: 0 | 1 | 2 = 0
+	_sleeveUses = 0
+	_sleeveOverwriteTime = 0
+
+
 	protected init() {
-		const drawFilter = {by: 'player', abilityId: ACTIONS.DRAW.id}
-		const sleeveFilter = {by: 'player', abilityId: ACTIONS.SLEEVE_DRAW.id}
-		const playFilter = {by: 'player', abilityId: ACTIONS.PLAY.id}
-
-		this.addHook('cast', drawFilter, this._onDraw)
-		this.addHook('cast', sleeveFilter, this._onSleeveDraw)
-		this.addHook('cast', playFilter, this._onPlay)
-
-		// this.addHook('applybuff', lsBuffFilter, this._onApplyLightspeed)
-		// this.addHook('removebuff', lsBuffFilter, this._onRemoveLightspeed)
+		this.addHook('cast', {abilityId: ACTIONS.DRAW.id, by: 'player'}, this._onDraw)
+		this.addHook('cast', {abilityId: ACTIONS.SLEEVE_DRAW.id, by: 'player'}, this._onSleeveDraw)
+		this.addHook('cast', {abilityId: ACTIONS.PLAY.id, by: 'player'}, this._onPlay)
 		this.addHook('complete', this._onComplete)
 	}
 
-	private _onDraw(event) {
+	private _onDraw(event: CastEvent) {
 		this._draws++
 
 		if (this._draws === 1) {
@@ -63,7 +68,6 @@ export default class Draw extends Module {
 		} else if (this._sleeveStacks > 0) {
 			this._sleeveStacks--
 			this.cooldowns.resetCooldown(ACTIONS.DRAW.id)
-
 			// Take holding as the time from last draw
 			this._drawDrift = event.timestamp - this._lastDrawTimestamp
 		} else {
@@ -84,9 +88,13 @@ export default class Draw extends Module {
 		this._plays++
 	}
 
-	private _onSleeveDraw() {
+	private _onSleeveDraw(event: CastEvent) {
 		this.cooldowns.resetCooldown(ACTIONS.DRAW.id)
 		this._sleeveStacks = 2
+		this._sleeveUses++
+
+		this._sleeveOverwriteTime += event.timestamp - this._lastDrawTimestamp
+
 	}
 
 	private _onComplete() {
@@ -106,7 +114,9 @@ export default class Draw extends Module {
 		const theoreticalMaxPlays = Math.floor((fightDuration - CARD_DURATION) / (ACTIONS.DRAW.cooldown * 1000)) + playsFromSleeveDraw + 1
 		// TODO: Include downtime calculation for each fight??
 
-		// Number of cards played
+		/*
+			CHECKLIST: Number of cards played
+		*/
 		this.checklist.add(new TieredRule({
 			name: <Trans id="ast.draw.checklist.name">
 				Play as many cards as possible
@@ -127,50 +137,58 @@ export default class Draw extends Module {
 			],
 		}))
 
-		// Didn't keep draw on cooldown
-		// this.suggestions.add(new TieredSuggestion({
-		// 	icon: ACTIONS.DRAW.icon,
-		// 	content: <Trans id="ast.draw.suggestions.cards.content">
-		// 		Keep Draw on cooldown
-		// 	</Trans>,
-		// 	why: <Trans id="ast.draw.suggestions.cards.why">
-		// 		<Plural value={drawUsesMissedFromCardsRounded} one="# Draw" other="# Draws" />
-		// 			lost.
-		// 	</Trans>,
-		// 	tiers: CARD_LOSS_SEVERITY,
-		// 	value: drawUsesMissedFromCardsRounded,
-		// }))
+		/*
+			SUGGESTION: Didn't keep draw on cooldown
+		*/
+		const drawUsesMissed = (this._drawTotalDrift/1000) % (ACTIONS.SLEEVE_DRAW.cooldown)
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.DRAW.icon,
+			content: <Trans id="ast.draw.suggestions.draws-missed.content">
+				Keep Draw on cooldown
+			</Trans>,
+			why: <Trans id="ast.draw.suggestions.draws-missed.why">
+				<Plural value={drawUsesMissed} one="# Draw" other="# Draws" />
+					lost from holding it for {this.parser.formatDuration(this._drawTotalDrift)}
+			</Trans>,
+			tiers: SEVERITIES.CARD_HOLDING,
+			value: this._drawTotalDrift,
+		}))
 
-		// const drawUsesMissedFromSleeve = ((sleeveHoldDuration - this._excusedDrawTimeLossFromSleeve) / (ACTIONS.DRAW.cooldown * 1000))
-		// const drawUsesMissedFromSleeveRounded = Math.floor(drawUsesMissedFromSleeve)
-
-		// Sleevedraw overwrote draw or not right after draw.
-		// this.suggestions.add(new TieredSuggestion({
-		// 	icon: ACTIONS.SLEEVE_DRAW.icon,
-		// 	content: <Trans id="ast.sleeve-draw.suggestions.draw.content">
-		// 			<ActionLink {...ACTIONS.SLEEVE_DRAW} /> restarts the cooldown on <ActionLink {...ACTIONS.DRAW} />,
-		// 			so it is better to use it right after a Draw.
-		// 	</Trans>,
-		// 	why: <Trans id="ast.sleeve-draw.suggestions.draw.why">
-		// 		<Plural value={drawUsesMissedFromSleeveRounded} one="# Draw" other="# Draws" />
-		// 			lost by having their cooldowns reset by Sleeve Draw.
-		// 	</Trans>,
-		// 	tiers: CARD_LOSS_SEVERITY,
-		// 	value: drawUsesMissedFromSleeveRounded,
-		// }))
-
-		// Didn't use sleeve draw
+		/*
+			SUGGESTION: Sleevedraw overwrote draw (or not used right after draw?)
+		*/
+		const drawOverwrites = (this._sleeveOverwriteTime/1000) % (ACTIONS.DRAW.cooldown)
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.SLEEVE_DRAW.icon,
-			content: <Trans id="ast.sleeve-draw.suggestions.draw.content">
-					You didn't use <ActionLink {...ACTIONS.SLEEVE_DRAW} /> at all. It should be used right after <ActionLink {...ACTIONS.DRAW} /> to reset the cooldown.
+			content: <Trans id="ast.sleeve-draw.suggestions.sleeve-overwrite.content">
+					<ActionLink {...ACTIONS.SLEEVE_DRAW} /> restarts the cooldown on <ActionLink {...ACTIONS.DRAW} />,
+					so it is better to use it right after a Draw.
 			</Trans>,
-			why: <Trans id="ast.sleeve-draw.suggestions.draw.why">
-				No sleeve draws used.
+			why: <Trans id="ast.sleeve-draw.suggestions.sleeve-overwrite.why">
+				<Plural value={drawOverwrites} one="# Draw" other="# Draws" />
+					lost by having their cooldowns reset by Sleeve Draw. A total of {this.parser.formatDuration(this._drawTotalDrift)} of Draw cooldown time was overwritten by Sleeve Draw.
 			</Trans>,
-			tiers: SEVERITY.MAJOR,
-			value: 0,
+			tiers: SEVERITIES.SLEEVE_DRAW_OVERWRITE,
+			value: this._sleeveOverwriteTime,
 		}))
+
+		/*
+			SUGGESTION: Didn't use sleeve draw at all
+		*/
+		if (this._sleeveUses === 0) {
+			this.suggestions.add(new TieredSuggestion({
+				icon: ACTIONS.SLEEVE_DRAW.icon,
+				content: <Trans id="ast.sleeve-draw.suggestions.draw.content">
+						You didn't use <ActionLink {...ACTIONS.SLEEVE_DRAW} /> at all. It should be used right after <ActionLink {...ACTIONS.DRAW} /> to reset the cooldown, and paired with Divination to stack card buffs at the same time.
+				</Trans>,
+				why: <Trans id="ast.sleeve-draw.suggestions.draw.why">
+					No sleeve draws used.
+				</Trans>,
+				tiers: SEVERITY.MAJOR,
+				value: 0,
+			}))
+		}
+
 
 	}
 }
