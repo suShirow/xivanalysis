@@ -1,13 +1,13 @@
-import { t } from '@lingui/macro'
-import { Plural, Trans } from '@lingui/react'
-import { ActionLink } from 'components/ui/DbLink'
+import {t} from '@lingui/macro'
+import {Plural, Trans} from '@lingui/react'
+import {ActionLink} from 'components/ui/DbLink'
 // import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
-import { CastEvent } from 'fflogs'
+import {CastEvent} from 'fflogs'
 // import STATUSES from 'data/STATUSES'
-import Module, { dependency } from 'parser/core/Module'
-import Checklist, { Requirement, TARGET, TieredRule } from 'parser/core/modules/Checklist'
-import Suggestions, { SEVERITY, TieredSuggestion } from 'parser/core/modules/Suggestions'
+import Module, {dependency} from 'parser/core/Module'
+import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
+import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Cooldowns from 'parser/jobs/mch/modules/Cooldowns'
 import React from 'react'
 
@@ -28,7 +28,7 @@ const SEVERITIES = {
 		15000: SEVERITY.MINOR,
 		45000: SEVERITY.MEDIUM,
 		60000: SEVERITY.MAJOR,
-	}
+	},
 }
 
 export default class Draw extends Module {
@@ -49,7 +49,6 @@ export default class Draw extends Module {
 	_sleeveStacks: 0 | 1 | 2 = 0
 	_sleeveUses = 0
 	_sleeveOverwriteTime = 0
-
 
 	protected init() {
 		this.addHook('cast', {abilityId: ACTIONS.DRAW.id, by: 'player'}, this._onDraw)
@@ -188,7 +187,6 @@ export default class Draw extends Module {
 				value: 0,
 			}))
 		}
-
 
 	}
 }

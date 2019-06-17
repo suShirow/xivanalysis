@@ -1,9 +1,9 @@
-import { t } from '@lingui/macro'
-import { Plural, Trans } from '@lingui/react'
-import { ActionLink } from 'components/ui/DbLink'
+import {t} from '@lingui/macro'
+import {Plural, Trans} from '@lingui/react'
+import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import { CastEvent } from 'fflogs'
+import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -19,7 +19,7 @@ const SEVERETIES = {
 	USES_MISSED: {
 		1: SEVERITY.MEDIUM,
 		2: SEVERITY.MAJOR,
-	}
+	},
 }
 
 // const PLAYER_CASTS = [ACTIONS.EARTHLY_STAR.id, ACTIONS.STELLAR_DETONATION.id]
@@ -107,4 +107,3 @@ export default class EarthlyStar extends Module {
 	}
 
 }
-

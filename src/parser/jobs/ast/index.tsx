@@ -1,12 +1,12 @@
-import { t } from '@lingui/macro'
-import { Trans } from '@lingui/react'
-import { ActionLink } from 'components/ui/DbLink'
+import {t} from '@lingui/macro'
+import {Trans} from '@lingui/react'
+import {ActionLink} from 'components/ui/DbLink'
 import TransMarkdown from 'components/ui/TransMarkdown'
 import ACTIONS from 'data/ACTIONS'
-import CONTRIBUTORS, { ROLES } from 'data/CONTRIBUTORS'
-import { Meta } from 'parser/core/Meta'
+import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
+import {Meta} from 'parser/core/Meta'
 import React from 'react'
-import { Icon, Message } from 'semantic-ui-react'
+import {Icon, Message} from 'semantic-ui-react'
 
 const description = t('ast.about.description-2')`
 Playing any healer requires you to carefully manage your MP and cooldowns to efficiently keep your party alive. If you plan out your heals and communicate with your co-healer, you will naturally end up putting out more DPS with the extra GCDs gained.
@@ -54,6 +54,6 @@ export default new Meta({
 				</ul>
 			</>,
 			contributors: [CONTRIBUTORS.SUSHIROU],
-		}
+		},
 	],
 })
