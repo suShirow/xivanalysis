@@ -19,7 +19,6 @@ export default {
 		name: 'Tetragrammaton',
 		icon: 'https://xivapi.com/i/002000/002633.png',
 		cooldown: 60,
-		//affected by lilies
 	},
 
 	ASSIZE: {
@@ -27,7 +26,6 @@ export default {
 		name: 'Assize',
 		icon: 'https://xivapi.com/i/002000/002634.png',
 		cooldown: 45,
-		//affected by lilies
 	},
 
 	ASYLUM: {
@@ -35,7 +33,6 @@ export default {
 		name: 'Asylum',
 		icon: 'https://xivapi.com/i/002000/002632.png',
 		cooldown: 60,
-		//affected by lilies
 	},
 
 	BENEDICTION: {
@@ -50,7 +47,7 @@ export default {
 		name: 'Holy',
 		icon: 'https://xivapi.com/i/002000/002629.png',
 		onGcd: true,
-		castTime: 3,
+		castTime: 2.5,
 	},
 
 	PRESENCE_OF_MIND: {
@@ -189,5 +186,48 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000405.png',
 		onGcd: true,
 		castTime: 2,
+	},
+
+	// 5.0
+	AFFLATUS_SOLACE: {
+		id: 120,
+		name: 'Afflatus Solace',
+		icon: 'https://xivapi.com/i/000000/000405.png',
+		onGcd: true,
+		castTime: 0,
+	},
+	AFFLATUS_RAPTURE: {
+		id: 120,
+		name: 'Afflatus Rapture',
+		icon: 'https://xivapi.com/i/000000/000405.png',
+		onGcd: true,
+		castTime: 0,
+	},
+	AFFLATUS_MISERY: {
+		id: 120,
+		name: 'Afflatus Misery',
+		icon: 'https://xivapi.com/i/000000/000405.png',
+		onGcd: true,
+		castTime: 0,
+	},
+	GLARE: {
+		id: 120,
+		name: 'Glare',
+		icon: 'https://xivapi.com/i/000000/000405.png',
+		onGcd: true,
+		castTime: 2.5,
+	},
+	DIA: {
+		id: 120,
+		name: 'Dia',
+		icon: 'https://xivapi.com/i/000000/000405.png',
+		onGcd: true,
+		castTime: 2.5,
+	},
+	TEMPERANCE: {
+		id: 120,
+		name: 'Temperance',
+		icon: 'https://xivapi.com/i/000000/000405.png',
+		cooldown: 120,
 	},
 }

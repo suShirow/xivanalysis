@@ -49,5 +49,10 @@ export default new Meta({
 			Changes: () => 'Update Assize cooldown to 45. Pre 4.5 logs are not affected.',
 			contributors: [CONTRIBUTORS.VULCWEN, CONTRIBUTORS.SUSHIROU],
 		},
+		{
+			date: new Date('2019-01-09'),
+			Changes: () => 'Update Assize cooldown to 45. Pre 4.5 logs are not affected.',
+			contributors: [CONTRIBUTORS.VULCWEN, CONTRIBUTORS.SUSHIROU],
+		},
 	],
 })
