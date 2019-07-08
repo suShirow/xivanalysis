@@ -43,9 +43,9 @@ export default {
 	},
 
 	MALEFIC_IV: {
-		id: 7442,
+		id: 16555,
 		name: 'Malefic IV',
-		icon: 'https://xivapi.com/i/003000/003145.png',
+		icon: 'https://xivapi.com/i/003000/003555.png',
 		onGcd: true,
 		castTime: 1.5,
 		mpCost: 400,
@@ -61,9 +61,9 @@ export default {
 	},
 
 	COMBUST_III: {
-		id: 3608,
+		id: 16554,
 		name: 'Combust II',
-		icon: 'https://xivapi.com/i/003000/003125.png',
+		icon: 'https://xivapi.com/i/003000/003554.png',
 		onGcd: true,
 		castTime: 0,
 		mpCost: 400,
@@ -147,8 +147,15 @@ export default {
 		cooldown: 5,
 	},
 
-	CELESTIAL_OPPOSITION: {
+	CELESTIAL_OPPOSITION_STB: {
 		id: 3616,
+		name: 'Celestial Opposition',
+		icon: 'https://xivapi.com/i/003000/003142.png',
+		cooldown: 120,
+	},
+
+	CELESTIAL_OPPOSITION: {
+		id: 16553,
 		name: 'Celestial Opposition',
 		icon: 'https://xivapi.com/i/003000/003142.png',
 		cooldown: 120,
@@ -226,37 +233,37 @@ export default {
 	// ----
 
 	HOROSCOPE: {
-		id: 1,
+		id: 16557,
 		name: 'Horoscope',
-		icon: 'https://xivapi.com/i/003000/003126.png',
+		icon: 'https://xivapi.com/i/003000/003550.png',
+	},
+
+	HOROSCOPE_ACTIVATION: {
+		id: 16558,
+		name: 'Horoscope Activation',
+		icon: 'https://xivapi.com/i/003000/003551.png',
 	},
 
 	NEUTRAL_SECT: {
-		id: 1,
+		id: 16559,
 		name: 'Neutral Sect',
-		icon: 'https://xivapi.com/i/003000/003126.png',
+		icon: 'https://xivapi.com/i/003000/003552.png',
 	},
 
 	DIVINATION: {
-		id: 1,
+		id: 16552,
 		name: 'Divination',
-		icon: 'https://xivapi.com/i/003000/003126.png',
+		icon: 'https://xivapi.com/i/003000/003553.png',
 	},
 
 	CELESTIAL_INTERSECTION: {
-		id: 1,
+		id: 16556,
 		name: 'Celestial Intersection',
-		icon: 'https://xivapi.com/i/003000/003126.png',
-	},
-
-	PLAY: {
-		id: 1,
-		name: 'Play',
-		icon: 'https://xivapi.com/i/003000/003126.png',
+		icon: 'https://xivapi.com/i/003000/003556.png',
 	},
 
 	// -----
-	// Arcana cast from draw slot
+	// SHB Arcana cast
 	// -----
 
 	THE_BALANCE: {
@@ -300,6 +307,14 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003115.png',
 		cooldown: 30,
 	},
+
+	// ----
+	// PRE-SHADOWBRINGERS
+	// ----
+
+	// -----
+	// Arcana cast from draw slot
+	// -----
 
 	// -----
 	// Expanded arcana cast from draw slot
