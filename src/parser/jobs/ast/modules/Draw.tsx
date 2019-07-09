@@ -18,8 +18,8 @@ import {PLAY} from './ArcanaGroups'
 // Track them using Draw when they still have a minor arcana (oopsie) or a card in the spread
 
 const CARD_DURATION = 1500
-const TIME_TO_PLAY_THRICE = 9000 // TODO: This is the time to play 3 cards using sleeve draw, but there's gotta be a better way
 const SLEEVE_DRAW_PLAYS_GIVEN = 3
+const SLEEVE_DRAW_CD_REDUCTION = 27
 
 const SEVERITIES = {
 	CARD_HOLDING: {
@@ -64,14 +64,14 @@ export default class Draw extends Module {
 		this._draws++
 
 		if (this._draws === 1) {
-			// The first use, take holding as from the first minute of the fight
+			// The first use, take holding as from the start of the fight
 			this._drawDrift = event.timestamp - this.parser.fight.start_time
 
 		} else if (this._sleeveStacks > 0) {
 			this._sleeveStacks--
-			this.cooldowns.resetCooldown(ACTIONS.DRAW.id)
-			// Take holding as the time from last draw
-			this._drawDrift = event.timestamp - this._lastDrawTimestamp
+			this.cooldowns.reduceCooldown(ACTIONS.DRAW.id, SLEEVE_DRAW_CD_REDUCTION)
+			// Take holding as from the time it comes off cooldown, but it was a 3s cd
+			this._drawDrift = event.timestamp - this._lastDrawTimestamp - ((ACTIONS.DRAW.cooldown - SLEEVE_DRAW_CD_REDUCTION) * 1000)
 		} else {
 			// Take holding as from the time it comes off cooldown
 			this._drawDrift = event.timestamp - this._lastDrawTimestamp - (ACTIONS.DRAW.cooldown * 1000)
@@ -149,7 +149,7 @@ export default class Draw extends Module {
 		/*
 			SUGGESTION: Didn't keep draw on cooldown
 		*/
-		const drawUsesMissed = Math.floor((this._drawTotalDrift/1000) % (ACTIONS.DRAW.cooldown))
+		const drawUsesMissed = Math.floor((this._drawTotalDrift) / (ACTIONS.DRAW.cooldown * 1000))
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.DRAW.icon,
 			content: <Trans id="ast.draw.suggestions.draws-missed.content">
@@ -181,7 +181,7 @@ export default class Draw extends Module {
 			/*
 				SUGGESTION: Sleevedraw overwrote draw (or not used right after draw?)
 			*/
-			const drawOverwrites = (this._sleeveOverwriteTime/1000) % (ACTIONS.DRAW.cooldown)
+			const drawOverwrites = (this._sleeveOverwriteTime) / (ACTIONS.DRAW.cooldown * 1000)
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.SLEEVE_DRAW.icon,
 				content: <Trans id="ast.sleeve-draw.suggestions.sleeve-overwrite.content">
@@ -190,7 +190,7 @@ export default class Draw extends Module {
 				</Trans>,
 				why: <Trans id="ast.sleeve-draw.suggestions.sleeve-overwrite.why">
 					<Plural value={drawOverwrites} one="# Draw" other="# Draws" />
-						lost by having their cooldowns reset by Sleeve Draw. A total of {this.parser.formatDuration(this._drawTotalDrift)} of Draw cooldown time was overwritten by Sleeve Draw.
+						lost by having their cooldowns reset by Sleeve Draw. A total of {this.parser.formatDuration(this._sleeveOverwriteTime)} of Draw cooldown time was overwritten by Sleeve Draw.
 				</Trans>,
 				tiers: SEVERITIES.SLEEVE_DRAW_OVERWRITE,
 				value: this._sleeveOverwriteTime,

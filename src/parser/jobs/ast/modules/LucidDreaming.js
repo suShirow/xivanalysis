@@ -124,7 +124,7 @@ export default class LucidDreaming extends Module {
 				severity: this._uses === 0 || _usesMissed > WASTED_USES_MAX_MEDIUM ? SEVERITY.MAJOR : SEVERITY.MEDIUM,
 				why: <Fragment>
 					<Trans id="ast.lucid-dreaming.suggestion.why">
-					About <Plural value={_usesMissed} one="# use" other="# uses" /> of Lucid Dreaming were missed by holding it for at least a total of {this.parser.formatDuration(holdDuration)}.
+						<Plural value={_usesMissed} one="# use" other="# uses" /> of Lucid Dreaming were missed by holding it for at least a total of {this.parser.formatDuration(holdDuration)}.
 					</Trans>
 				</Fragment>,
 			}))
