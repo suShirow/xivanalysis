@@ -10,6 +10,7 @@ export default {
 		id: 1881,
 		name: 'Combust III',
 		icon: 'https://xivapi.com/i/013000/013248.png',
+		duration: 30,
 	},
 
 	ASPECTED_BENEFIC: {

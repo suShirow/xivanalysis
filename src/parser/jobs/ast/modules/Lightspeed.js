@@ -1,16 +1,14 @@
 import {t} from '@lingui/macro'
-import {Trans, Plural} from '@lingui/react'
-import React, {Fragment} from 'react'
-import {Accordion} from 'semantic-ui-react'
-
+import {Plural, Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
+import React, {Fragment} from 'react'
+import {Accordion} from 'semantic-ui-react'
 // import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const LIGHTSPEED_CAST_TIME_MOD = -2.5
@@ -159,9 +157,9 @@ export default class LIGHTSPEED extends Module {
 		return <Fragment>
 			<p>
 				<Trans id="ast.lightspeed.messages.explanation">
-				Some of the applications of <ActionLink {...ACTIONS.LIGHTSPEED} /> include MP savings on heavy healing segments and keeping casts up while on the move and for weaving OGCDs.
-					<ActionLink {...ACTIONS.ESSENTIAL_DIGNITY} /> can reduce the cooldown, and sometimes you'd hold onto it to align with specific scenarios.<br/><br/>
-				Each fight calls for a different strategy, but try to utilize it as much as possible!
+				Some of the applications of <ActionLink {...ACTIONS.LIGHTSPEED} /> include MP savings on heavy healing segments, keeping casts up while on the move and for weaving OGCDs and cards during Divination windows.<br/>
+					<ActionLink {...ACTIONS.ESSENTIAL_DIGNITY} /> can reduce the cooldown, and sometimes you'd hold onto it to align with specific scenarios. Each fight calls for a different strategy, but try to utilize it as much as possible.<br/><br/>
+				Unless it's being used for <ActionLink {...ACTIONS.ASCEND} />, lightspeed should fit at least 6 GCDs.
 				</Trans>
 			</p>
 			{panels.length === 0 && noCastsMessage}

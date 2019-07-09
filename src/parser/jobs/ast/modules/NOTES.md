@@ -18,11 +18,6 @@ Earthly Star
 * [ ] Did not precook Earthly before pull (Subjected to fight?)
 
 
-Buff Extensions
-* [x] What did they extend with CO?
-* [x] What did they extend with Dilation?
-* Lucid combo
-* BUG: buffs from pre-pull are not captured properly when extended (see https://discordapp.com/channels/441414116914233364/441424599310270464/474063057094574080)
 
 * Lightspeed usage?
 

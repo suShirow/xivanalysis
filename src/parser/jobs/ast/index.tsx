@@ -36,21 +36,23 @@ export default new Meta({
 			</Message.Content>
 		</Message>
 	</>,
-	// supportedPatches: {
-	// 	from: '4.3',
-	// 	to: '4.5',
-	// },
+	supportedPatches: {
+		from: '5.0',
+		to: '5.0',
+	},
 	contributors: [
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.MAINTAINER},
 	],
 	changelog: [
 		{
-			date: new Date('2019-06-28'),
+			date: new Date('2019-07-09'),
 			Changes: () => <>
-				<strong>Support for Shadowbringers</strong>:
+				<strong>Early support for Shadowbringers</strong>:
 				<ul>
-					<li>Uptime checks for <ActionLink {...ACTIONS.DRAW}/>, <ActionLink {...ACTIONS.PLAY}/>, <ActionLink {...ACTIONS.SLEEVE_DRAW}/>.</li>
-					<li></li>
+					<li>(<ActionLink {...ACTIONS.COMBUST_III} />) DoT update</li>
+					<li>(<ActionLink {...ACTIONS.UNDRAW} />) Tracking to suggest not to use it</li>
+					<li>(<ActionLink {...ACTIONS.LUCID_DREAMING} />, <ActionLink {...ACTIONS.LIGHTSPEED} />) Message update</li>
+					<li>(<ActionLink {...ACTIONS.DRAW} />, <ActionLink {...ACTIONS.SLEEVE_DRAW} />) Usage and uptime tracking</li>
 				</ul>
 			</>,
 			contributors: [CONTRIBUTORS.SUSHIROU],

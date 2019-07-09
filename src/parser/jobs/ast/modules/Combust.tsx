@@ -31,7 +31,7 @@ export default class Combust extends DoTs {
 		this.checklist.add(new Rule({
 			name: <Trans id="ast.dots.rule.name">Keep your DoT up</Trans>,
 			description: <Trans id="ast.dots.rule.description">
-				While Astrologians only have one DoT, it still makes up a good portion of your damage. The duration of 30 seconds matches the cooldown on (<ActionLink {...ACTIONS.DRAW} />), giving you space to manage cards. It also enables you to maneuver around without dropping GCD uptime. Aim to keep this DoT up at all times.
+				While Astrologians only have one DoT, it still makes up a good portion of your damage. Use it to weave (<ActionLink {...ACTIONS.DRAW} />) and manage cards, or to maneuver around without dropping GCD uptime. Aim to keep this DoT up at all times.
 				</Trans>,
 			target: 90,
 			requirements: [

@@ -100,7 +100,7 @@ export default class EarthlyStar extends Module {
 				tiers: SEVERETIES.USES_MISSED,
 				value: this._uses === 0 ? 100 : _usesMissed,
 				why: <Trans id="ast.earthyl-star.suggestion.missed-use.why">
-					About {_usesMissed} uses of <ActionLink {...ACTIONS.EARTHLY_STAR} /> were missed by holding it for at least a total of {this.parser.formatDuration(holdDuration)}.
+					About {_usesMissed} uses of Earthly Star were missed by holding it for at least a total of {this.parser.formatDuration(holdDuration)}.
 				</Trans>,
 			}))
 		}

@@ -13,8 +13,6 @@ const WASTED_USES_MAX_MEDIUM = 2
 // const LUCID_DRIFT_ALLOWANCE = 1.1
 // const GCDS_HOLDING_LUCID_THRESHOLD = 5
 
-// Lucid seems to recover about 5% of the user's max MP per tick?
-// TODO: Find Math supporting the above observation, apply to calculations
 export default class LucidDreaming extends Module {
 	static handle = 'lucid'
 	static dependencies = [
@@ -120,7 +118,7 @@ export default class LucidDreaming extends Module {
 				icon: ACTIONS.LUCID_DREAMING.icon,
 				content: <Fragment>
 					<Trans id="ast.lucid-dreaming.suggestion.content">
-					Keep <ActionLink {...ACTIONS.LUCID_DREAMING} /> on cooldown for better MP management, unless there's a specific part of the fight you need to drop aggro quick.
+					Keep <ActionLink {...ACTIONS.LUCID_DREAMING} /> on cooldown for better MP management.
 					</Trans>
 				</Fragment>,
 				severity: this._uses === 0 || _usesMissed > WASTED_USES_MAX_MEDIUM ? SEVERITY.MAJOR : SEVERITY.MEDIUM,

@@ -7,16 +7,19 @@ import {CastEvent} from 'fflogs'
 // import STATUSES from 'data/STATUSES'
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Cooldowns from 'parser/jobs/mch/modules/Cooldowns'
 import React from 'react'
+import {PLAY} from './ArcanaGroups'
 
 // THINGS TO TRACK:
 // Whether they used draw prepull (check how soon they played and then drew again)
-// perhaps go for displaying 11 out of 10 plays used, since prepull draw can be iffy?
+// perhaps go for displaying 11 out of 10 plays used, since prepull draw can be optional?
+// Track them using Draw when they still have a minor arcana (oopsie) or a card in the spread
 
 const CARD_DURATION = 1500
-const TIME_TO_PLAY_THRICE = 7500
+const TIME_TO_PLAY_THRICE = 9000 // TODO: This is the time to play 3 cards using sleeve draw, but there's gotta be a better way
+const SLEEVE_DRAW_PLAYS_GIVEN = 3
 
 const SEVERITIES = {
 	CARD_HOLDING: {
@@ -53,7 +56,7 @@ export default class Draw extends Module {
 	protected init() {
 		this.addHook('cast', {abilityId: ACTIONS.DRAW.id, by: 'player'}, this._onDraw)
 		this.addHook('cast', {abilityId: ACTIONS.SLEEVE_DRAW.id, by: 'player'}, this._onSleeveDraw)
-		this.addHook('cast', {abilityId: ACTIONS.PLAY.id, by: 'player'}, this._onPlay)
+		this.addHook('cast', {abilityId: [...PLAY], by: 'player'}, this._onPlay)
 		this.addHook('complete', this._onComplete)
 	}
 
@@ -92,7 +95,7 @@ export default class Draw extends Module {
 		this._sleeveStacks = 2
 		this._sleeveUses++
 
-		this._sleeveOverwriteTime += event.timestamp - this._lastDrawTimestamp
+		this._sleeveOverwriteTime += (event.timestamp - this._lastDrawTimestamp)
 
 	}
 
@@ -109,13 +112,20 @@ export default class Draw extends Module {
 
 		// Begin Theoretical Max Plays calc
 		const fightDuration = this.parser.fight.end_time - this.parser.fight.start_time
-		const playsFromSleeveDraw = Math.floor((fightDuration - CARD_DURATION - TIME_TO_PLAY_THRICE) / (ACTIONS.SLEEVE_DRAW.cooldown * 1000))
-		const theoreticalMaxPlays = Math.floor((fightDuration - CARD_DURATION) / (ACTIONS.DRAW.cooldown * 1000)) + playsFromSleeveDraw + 1
+		const sleeveCounts = Math.floor((fightDuration - CARD_DURATION) / (ACTIONS.SLEEVE_DRAW.cooldown * 1000))
+
+		const playsFromSleeveDraw = sleeveCounts * SLEEVE_DRAW_PLAYS_GIVEN
+		const playsFromDraw = Math.floor((fightDuration - CARD_DURATION) / (ACTIONS.DRAW.cooldown * 1000))
+
+		const theoreticalMaxPlays = playsFromDraw + playsFromSleeveDraw + 1
+		// TODO: Need to account for resetting draw CD everytime sleeve plays
 		// TODO: Include downtime calculation for each fight??
 
 		/*
 			CHECKLIST: Number of cards played
 		*/
+		const warnTarget = (theoreticalMaxPlays - 1 / theoreticalMaxPlays) * 100
+		const failTarget = (theoreticalMaxPlays - 2 / theoreticalMaxPlays) * 100
 		this.checklist.add(new TieredRule({
 			name: <Trans id="ast.draw.checklist.name">
 				Play as many cards as possible
@@ -124,7 +134,7 @@ export default class Draw extends Module {
 				Playing cards will let you collect seals for <ActionLink {...ACTIONS.DIVINATION} /> and raise the party damage. <br/>
 				* The theoretical maximum here accounts for <ActionLink {...ACTIONS.SLEEVE_DRAW} /> and assumes a draw was made pre-pull.
 			</Trans>,
-			tiers: {[theoreticalMaxPlays - 1]: TARGET.WARN, [theoreticalMaxPlays - 2]: TARGET.FAIL, [theoreticalMaxPlays]: TARGET.SUCCESS},
+			tiers: {[warnTarget]: TARGET.WARN, [failTarget]: TARGET.FAIL, [100]: TARGET.SUCCESS},
 			requirements: [
 				new Requirement({
 					name: <Trans id="ast.draw.checklist.requirement.name">
@@ -139,11 +149,11 @@ export default class Draw extends Module {
 		/*
 			SUGGESTION: Didn't keep draw on cooldown
 		*/
-		const drawUsesMissed = (this._drawTotalDrift/1000) % (ACTIONS.SLEEVE_DRAW.cooldown)
+		const drawUsesMissed = Math.floor((this._drawTotalDrift/1000) % (ACTIONS.DRAW.cooldown))
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.DRAW.icon,
 			content: <Trans id="ast.draw.suggestions.draws-missed.content">
-				Keep Draw on cooldown
+				Keep <ActionLink {...ACTIONS.DRAW} /> on cooldown
 			</Trans>,
 			why: <Trans id="ast.draw.suggestions.draws-missed.why">
 				<Plural value={drawUsesMissed} one="# Draw" other="# Draws" />
@@ -154,37 +164,36 @@ export default class Draw extends Module {
 		}))
 
 		/*
-			SUGGESTION: Sleevedraw overwrote draw (or not used right after draw?)
-		*/
-		const drawOverwrites = (this._sleeveOverwriteTime/1000) % (ACTIONS.DRAW.cooldown)
-		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.SLEEVE_DRAW.icon,
-			content: <Trans id="ast.sleeve-draw.suggestions.sleeve-overwrite.content">
-					<ActionLink {...ACTIONS.SLEEVE_DRAW} /> restarts the cooldown on <ActionLink {...ACTIONS.DRAW} />,
-					so it is better to use it right after a Draw.
-			</Trans>,
-			why: <Trans id="ast.sleeve-draw.suggestions.sleeve-overwrite.why">
-				<Plural value={drawOverwrites} one="# Draw" other="# Draws" />
-					lost by having their cooldowns reset by Sleeve Draw. A total of {this.parser.formatDuration(this._drawTotalDrift)} of Draw cooldown time was overwritten by Sleeve Draw.
-			</Trans>,
-			tiers: SEVERITIES.SLEEVE_DRAW_OVERWRITE,
-			value: this._sleeveOverwriteTime,
-		}))
-
-		/*
 			SUGGESTION: Didn't use sleeve draw at all
 		*/
 		if (this._sleeveUses === 0) {
-			this.suggestions.add(new TieredSuggestion({
+			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SLEEVE_DRAW.icon,
 				content: <Trans id="ast.sleeve-draw.suggestions.draw.content">
-						You didn't use <ActionLink {...ACTIONS.SLEEVE_DRAW} /> at all. It should be used right after <ActionLink {...ACTIONS.DRAW} /> to reset the cooldown, and paired with Divination to stack card buffs at the same time.
+						You didn't use <ActionLink {...ACTIONS.SLEEVE_DRAW} /> at all. It should be used right after <ActionLink {...ACTIONS.DRAW} /> to reset the cooldown, and paired with <ActionLink {...ACTIONS.DIVINATION} /> to stack card buffs at the same time.
 				</Trans>,
 				why: <Trans id="ast.sleeve-draw.suggestions.draw.why">
 					No sleeve draws used.
 				</Trans>,
-				tiers: SEVERITY.MAJOR,
-				value: 0,
+				severity: SEVERITY.MAJOR,
+			}))
+		} else {
+			/*
+				SUGGESTION: Sleevedraw overwrote draw (or not used right after draw?)
+			*/
+			const drawOverwrites = (this._sleeveOverwriteTime/1000) % (ACTIONS.DRAW.cooldown)
+			this.suggestions.add(new TieredSuggestion({
+				icon: ACTIONS.SLEEVE_DRAW.icon,
+				content: <Trans id="ast.sleeve-draw.suggestions.sleeve-overwrite.content">
+						<ActionLink {...ACTIONS.SLEEVE_DRAW} /> restarts the cooldown on <ActionLink {...ACTIONS.DRAW} />,
+						so it is better to use it right after a Draw.
+				</Trans>,
+				why: <Trans id="ast.sleeve-draw.suggestions.sleeve-overwrite.why">
+					<Plural value={drawOverwrites} one="# Draw" other="# Draws" />
+						lost by having their cooldowns reset by Sleeve Draw. A total of {this.parser.formatDuration(this._drawTotalDrift)} of Draw cooldown time was overwritten by Sleeve Draw.
+				</Trans>,
+				tiers: SEVERITIES.SLEEVE_DRAW_OVERWRITE,
+				value: this._sleeveOverwriteTime,
 			}))
 		}
 

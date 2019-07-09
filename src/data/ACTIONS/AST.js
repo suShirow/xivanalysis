@@ -200,6 +200,12 @@ export default {
 		cooldown: 30,
 	},
 
+	PLAY: {
+		id: 17055,
+		name: 'Play',
+		icon: 'https://xivapi.com/i/003000/003102.png',
+	},
+
 	ROYAL_ROAD: {
 		id: 3591,
 		name: 'Royal Road',
@@ -225,7 +231,7 @@ export default {
 		id: 7448,
 		name: 'Sleeve Draw',
 		icon: 'https://xivapi.com/i/003000/003107.png',
-		cooldown: 120,
+		cooldown: 180,
 	},
 
 	// ----
@@ -236,6 +242,7 @@ export default {
 		id: 16557,
 		name: 'Horoscope',
 		icon: 'https://xivapi.com/i/003000/003550.png',
+		cooldown: 60,
 	},
 
 	HOROSCOPE_ACTIVATION: {
@@ -248,12 +255,14 @@ export default {
 		id: 16559,
 		name: 'Neutral Sect',
 		icon: 'https://xivapi.com/i/003000/003552.png',
+		cooldown: 120,
 	},
 
 	DIVINATION: {
 		id: 16552,
 		name: 'Divination',
 		icon: 'https://xivapi.com/i/003000/003553.png',
+		cooldown: 180,
 	},
 
 	CELESTIAL_INTERSECTION: {
