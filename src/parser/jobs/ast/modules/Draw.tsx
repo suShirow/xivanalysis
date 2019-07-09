@@ -132,7 +132,7 @@ export default class Draw extends Module {
 			</Trans>,
 			description: <Trans id="ast.draw.checklist.description">
 				Playing cards will let you collect seals for <ActionLink {...ACTIONS.DIVINATION} /> and raise the party damage. <br/>
-				* The theoretical maximum here accounts for <ActionLink {...ACTIONS.SLEEVE_DRAW} /> and assumes a draw was made pre-pull.
+				* The maximum here accounts for <ActionLink {...ACTIONS.SLEEVE_DRAW} /> and assumes a card was prepared pre-pull.
 			</Trans>,
 			tiers: {[warnTarget]: TARGET.WARN, [failTarget]: TARGET.FAIL, [100]: TARGET.SUCCESS},
 			requirements: [
@@ -169,10 +169,10 @@ export default class Draw extends Module {
 		if (this._sleeveUses === 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SLEEVE_DRAW.icon,
-				content: <Trans id="ast.sleeve-draw.suggestions.draw.content">
-						You didn't use <ActionLink {...ACTIONS.SLEEVE_DRAW} /> at all. It should be used right after <ActionLink {...ACTIONS.DRAW} /> to reset the cooldown, and paired with <ActionLink {...ACTIONS.DIVINATION} /> to stack card buffs at the same time.
+				content: <Trans id="ast.draw.suggestions.sleeve-no-usage.content">
+						No uses of <ActionLink {...ACTIONS.SLEEVE_DRAW} /> at all. It should be used right after <ActionLink {...ACTIONS.DRAW} /> to reset the cooldown, and paired with <ActionLink {...ACTIONS.DIVINATION} /> to stack card buffs at the same time.
 				</Trans>,
-				why: <Trans id="ast.sleeve-draw.suggestions.draw.why">
+				why: <Trans id="ast.draw.suggestions.sleeve-no-usage.why">
 					No sleeve draws used.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
@@ -184,11 +184,11 @@ export default class Draw extends Module {
 			const drawOverwrites = (this._sleeveOverwriteTime) / (ACTIONS.DRAW.cooldown * 1000)
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.SLEEVE_DRAW.icon,
-				content: <Trans id="ast.sleeve-draw.suggestions.sleeve-overwrite.content">
+				content: <Trans id="ast.draw.suggestions.sleeve-overwrite.content">
 						<ActionLink {...ACTIONS.SLEEVE_DRAW} /> restarts the cooldown on <ActionLink {...ACTIONS.DRAW} />,
 						so it is better to use it right after a Draw.
 				</Trans>,
-				why: <Trans id="ast.sleeve-draw.suggestions.sleeve-overwrite.why">
+				why: <Trans id="ast.draw.suggestions.sleeve-overwrite.why">
 					<Plural value={drawOverwrites} one="# Draw" other="# Draws" />
 						lost by having their cooldowns reset by Sleeve Draw. A total of {this.parser.formatDuration(this._sleeveOverwriteTime)} of Draw cooldown time was overwritten by Sleeve Draw.
 				</Trans>,

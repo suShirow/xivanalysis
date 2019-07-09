@@ -5,8 +5,9 @@ import EarthlyStar from './EarthlyStar'
 import Lightspeed from './Lightspeed'
 import LucidDreaming from './LucidDreaming'
 import ArcanaUndrawUsage from './ArcanaUndrawUsage'
-import ArcanaTracking from './ArcanaTracking'
-import ArcanaSuggestions from './ArcanaSuggestions'
+import Horoscope from './Horoscope'
+// import ArcanaTracking from './ArcanaTracking'
+// import ArcanaSuggestions from './ArcanaSuggestions'
 
 export default [
 	Cooldowns,
@@ -16,6 +17,7 @@ export default [
 	LucidDreaming,
 	Draw,
 	ArcanaUndrawUsage,
-	ArcanaTracking,
-	ArcanaSuggestions,
+	Horoscope,
+	// ArcanaTracking,
+	// ArcanaSuggestions,
 ]

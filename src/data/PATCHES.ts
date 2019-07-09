@@ -22,7 +22,7 @@ export function languageToEdition(lang: ReportLanguage): GameEdition {
 			return GameEdition.CHINESE
 	}
 
-	throw new Error()
+	throw new Error(`Unknown report language "${lang}" received.`)
 }
 
 // Using global as a source of truth on the order of patch keys
@@ -57,7 +57,7 @@ const PATCHES = {
 			[GameEdition.CHINESE]: 1506412800,
 		},
 		branch: {
-			baseUrl: 'https://xivanalysis.com',
+			baseUrl: 'https://stormblood.xivanalysis.com',
 		},
 	},
 	'5.0': {

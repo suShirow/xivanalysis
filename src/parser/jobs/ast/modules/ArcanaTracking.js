@@ -244,10 +244,10 @@ export default class ArcanaTracking extends Module {
 		if (this._drawsOverwritten > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.MINOR_ARCANA.icon,
-				content: <Trans id="ast.arcana-tracking.suggestions.draw-overwrite.content">
+				content: <><Trans id="ast.arcana-tracking.suggestions.draw-overwrite.content">
 						Never use <ActionLink {...ACTIONS.DRAW} /> if you have a card in the draw slot. It will overwrite it if you had <ActionLink {...ACTIONS.MINOR_ARCANA} />,
                         and Draw will go on cooldown without any effect if you had anything else.
-				</Trans>,
+				</Trans></>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="ast.arcana-tracking.suggestions.draw-overwrite.why">
 					<Plural value={this._drawsOverwritten} one="# card" other="# cards" /> were overwritten or lost by using draw before playing the active card.

@@ -1,18 +1,17 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import React, {Fragment} from 'react'
-import {Table, Icon, Message, Accordion, Button} from 'semantic-ui-react'
-
-import {PLAY} from './ArcanaGroups'
-// import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
-import Module from 'parser/core/Module'
-import ACTIONS from 'data/ACTIONS'
+import {ActionLink} from 'components/ui/DbLink'
 import JobIcon from 'components/ui/JobIcon'
 import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
-import {ActionLink} from 'components/ui/DbLink'
+import Module from 'parser/core/Module'
+import React, {Fragment} from 'react'
+import {Accordion, Button, Table} from 'semantic-ui-react'
+import {PLAY} from './ArcanaGroups'
 import styles from './ArcanaSuggestions.module.css'
+// import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // const LADY_OF_CROWNS_STATUS_ICON = 'https://xivapi.com/i/014000/014840.png'
 // const LORD_OF_CROWNS_STATUS_ICON = 'https://xivapi.com/i/014000/014841.png'
@@ -196,14 +195,14 @@ export default class ArcanaSuggestions extends Module {
 					This section keeps track of every card action made during the fight, and the state of the spread after each action.
 				</Trans>
 			</p>
-			<Message warning icon>
+			{/* <Message warning icon>
 				<Icon name="warning sign"/>
 				<Message.Content>
 					<Trans id="ast.arcana-suggestions.messages.disclaimer">
 							The intention of this section is to give a general recommendation of best practices. It will not take into consideration which party member was playing better, or whether they were in burst phase.
 					</Trans>
 				</Message.Content>
-			</Message>
+			</Message> */}
 			<Accordion
 				exclusive={false}
 				panels={cardDisplayPanel}
