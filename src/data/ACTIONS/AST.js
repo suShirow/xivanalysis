@@ -133,27 +133,6 @@ export default {
 		cooldown: 5,
 	},
 
-	LADY_OF_CROWNS: {
-		id: 7445,
-		name: 'Lady Of Crowns',
-		icon: 'https://xivapi.com/i/003000/003146.png',
-		cooldown: 5,
-	},
-
-	LORD_OF_CROWNS: {
-		id: 7444,
-		name: 'Lord Of Crowns',
-		icon: 'https://xivapi.com/i/003000/003147.png',
-		cooldown: 5,
-	},
-
-	CELESTIAL_OPPOSITION_STB: {
-		id: 3616,
-		name: 'Celestial Opposition',
-		icon: 'https://xivapi.com/i/003000/003142.png',
-		cooldown: 120,
-	},
-
 	CELESTIAL_OPPOSITION: {
 		id: 16553,
 		name: 'Celestial Opposition',
@@ -234,8 +213,15 @@ export default {
 		cooldown: 180,
 	},
 
+	UNDRAW: {
+		id: 9629,
+		name: 'Undraw',
+		icon: 'https://xivapi.com/i/003000/003108.png',
+		cooldown: 3,
+	},
+
 	// ----
-	// SHB
+	// 70-80
 	// ----
 
 	HOROSCOPE: {
@@ -272,7 +258,7 @@ export default {
 	},
 
 	// -----
-	// SHB Arcana cast
+	// Arcana cast
 	// -----
 
 	THE_BALANCE: {
@@ -317,174 +303,185 @@ export default {
 		cooldown: 30,
 	},
 
+	LADY_OF_CROWNS: {
+		id: 7445,
+		name: 'Lady Of Crowns',
+		icon: 'https://xivapi.com/i/003000/003146.png',
+		cooldown: 5,
+	},
+
+	LORD_OF_CROWNS: {
+		id: 7444,
+		name: 'Lord Of Crowns',
+		icon: 'https://xivapi.com/i/003000/003147.png',
+		cooldown: 5,
+	},
+
 	// ----
-	// PRE-SHADOWBRINGERS
+	// < 5.0
 	// ----
 
-	// -----
-	// Arcana cast from draw slot
-	// -----
+	// CELESTIAL_OPPOSITION_STB: {
+	// 	id: 3616,
+	// 	name: 'Celestial Opposition',
+	// 	icon: 'https://xivapi.com/i/003000/003142.png',
+	// 	cooldown: 120,
+	// },
 
 	// -----
 	// Expanded arcana cast from draw slot
 	// -----
 
-	THE_BALANCE_EXPANDED: {
-		id: 4407,
-		name: 'Expanded Balance',
-		icon: 'https://xivapi.com/i/003000/003110.png',
-		cooldown: 30,
-	},
+	// THE_BALANCE_EXPANDED: {
+	// 	id: 4407,
+	// 	name: 'Expanded Balance',
+	// 	icon: 'https://xivapi.com/i/003000/003110.png',
+	// 	cooldown: 30,
+	// },
 
-	THE_BOLE_EXPANDED: {
-		id: 4408,
-		name: 'Expanded Bole',
-		icon: 'https://xivapi.com/i/003000/003111.png',
-		cooldown: 30,
-	},
+	// THE_BOLE_EXPANDED: {
+	// 	id: 4408,
+	// 	name: 'Expanded Bole',
+	// 	icon: 'https://xivapi.com/i/003000/003111.png',
+	// 	cooldown: 30,
+	// },
 
-	THE_ARROW_EXPANDED: {
-		id: 4409,
-		name: 'Expanded Arrow',
-		icon: 'https://xivapi.com/i/003000/003112.png',
-		cooldown: 30,
-	},
+	// THE_ARROW_EXPANDED: {
+	// 	id: 4409,
+	// 	name: 'Expanded Arrow',
+	// 	icon: 'https://xivapi.com/i/003000/003112.png',
+	// 	cooldown: 30,
+	// },
 
-	THE_SPEAR_EXPANDED: {
-		id: 4410,
-		name: 'Expanded Spear',
-		icon: 'https://xivapi.com/i/003000/003113.png',
-		cooldown: 30,
-	},
+	// THE_SPEAR_EXPANDED: {
+	// 	id: 4410,
+	// 	name: 'Expanded Spear',
+	// 	icon: 'https://xivapi.com/i/003000/003113.png',
+	// 	cooldown: 30,
+	// },
 
-	THE_EWER_EXPANDED: {
-		id: 4411,
-		name: 'Expanded Ewer',
-		icon: 'https://xivapi.com/i/003000/003114.png',
-		cooldown: 30,
-	},
+	// THE_EWER_EXPANDED: {
+	// 	id: 4411,
+	// 	name: 'Expanded Ewer',
+	// 	icon: 'https://xivapi.com/i/003000/003114.png',
+	// 	cooldown: 30,
+	// },
 
-	THE_SPIRE_EXPANDED: {
-		id: 4412,
-		name: 'Expanded Spire',
-		icon: 'https://xivapi.com/i/003000/003115.png',
-		cooldown: 30,
-	},
+	// THE_SPIRE_EXPANDED: {
+	// 	id: 4412,
+	// 	name: 'Expanded Spire',
+	// 	icon: 'https://xivapi.com/i/003000/003115.png',
+	// 	cooldown: 30,
+	// },
 
 	// -----
 	// Arcana cast from held slot
 	// -----
 
-	THE_BALANCE_FROM_SPREAD: {
-		id: 4413,
-		name: 'The Balance (held)',
-		icon: 'https://xivapi.com/i/003000/003110.png',
-		cooldown: 30,
-	},
+	// THE_BALANCE_FROM_SPREAD: {
+	// 	id: 4413,
+	// 	name: 'The Balance (held)',
+	// 	icon: 'https://xivapi.com/i/003000/003110.png',
+	// 	cooldown: 30,
+	// },
 
-	THE_BOLE_FROM_SPREAD: {
-		id: 4414,
-		name: 'The Bole (held)',
-		icon: 'https://xivapi.com/i/003000/003111.png',
-		cooldown: 30,
-	},
+	// THE_BOLE_FROM_SPREAD: {
+	// 	id: 4414,
+	// 	name: 'The Bole (held)',
+	// 	icon: 'https://xivapi.com/i/003000/003111.png',
+	// 	cooldown: 30,
+	// },
 
-	THE_ARROW_FROM_SPREAD: {
-		id: 4415,
-		name: 'The Arrow (held)',
-		icon: 'https://xivapi.com/i/003000/003112.png',
-		cooldown: 30,
-	},
+	// THE_ARROW_FROM_SPREAD: {
+	// 	id: 4415,
+	// 	name: 'The Arrow (held)',
+	// 	icon: 'https://xivapi.com/i/003000/003112.png',
+	// 	cooldown: 30,
+	// },
 
-	THE_SPEAR_FROM_SPREAD: {
-		id: 4416,
-		name: 'The Spear (held)',
-		icon: 'https://xivapi.com/i/003000/003113.png',
-		cooldown: 30,
-	},
+	// THE_SPEAR_FROM_SPREAD: {
+	// 	id: 4416,
+	// 	name: 'The Spear (held)',
+	// 	icon: 'https://xivapi.com/i/003000/003113.png',
+	// 	cooldown: 30,
+	// },
 
-	THE_EWER_FROM_SPREAD: {
-		id: 4417,
-		name: 'The Ewer (held)',
-		icon: 'https://xivapi.com/i/003000/003114.png',
-		cooldown: 30,
-	},
+	// THE_EWER_FROM_SPREAD: {
+	// 	id: 4417,
+	// 	name: 'The Ewer (held)',
+	// 	icon: 'https://xivapi.com/i/003000/003114.png',
+	// 	cooldown: 30,
+	// },
 
-	THE_SPIRE_FROM_SPREAD: {
-		id: 4418,
-		name: 'The Spire (held)',
-		icon: 'https://xivapi.com/i/003000/003115.png',
-		cooldown: 30,
-	},
+	// THE_SPIRE_FROM_SPREAD: {
+	// 	id: 4418,
+	// 	name: 'The Spire (held)',
+	// 	icon: 'https://xivapi.com/i/003000/003115.png',
+	// 	cooldown: 30,
+	// },
 
 	// -----
 	// Expanded arcana cast from held slot
 	// -----
 
-	THE_BALANCE_EXPANDED_FROM_SPREAD: {
-		id: 4419,
-		name: 'Expanded Balance (held)',
-		icon: 'https://xivapi.com/i/003000/003110.png',
-		cooldown: 30,
-	},
+	// THE_BALANCE_EXPANDED_FROM_SPREAD: {
+	// 	id: 4419,
+	// 	name: 'Expanded Balance (held)',
+	// 	icon: 'https://xivapi.com/i/003000/003110.png',
+	// 	cooldown: 30,
+	// },
 
-	THE_BOLE_EXPANDED_FROM_SPREAD: {
-		id: 4420,
-		name: 'Expanded Bole (held)',
-		icon: 'https://xivapi.com/i/003000/003111.png',
-		cooldown: 30,
-	},
+	// THE_BOLE_EXPANDED_FROM_SPREAD: {
+	// 	id: 4420,
+	// 	name: 'Expanded Bole (held)',
+	// 	icon: 'https://xivapi.com/i/003000/003111.png',
+	// 	cooldown: 30,
+	// },
 
-	THE_ARROW_EXPANDED_FROM_SPREAD: {
-		id: 4421,
-		name: 'Expanded Arrow (held)',
-		icon: 'https://xivapi.com/i/003000/003112.png',
-		cooldown: 30,
-	},
+	// THE_ARROW_EXPANDED_FROM_SPREAD: {
+	// 	id: 4421,
+	// 	name: 'Expanded Arrow (held)',
+	// 	icon: 'https://xivapi.com/i/003000/003112.png',
+	// 	cooldown: 30,
+	// },
 
-	THE_SPEAR_EXPANDED_FROM_SPREAD: {
-		id: 4422,
-		name: 'Expanded Spear (held)',
-		icon: 'https://xivapi.com/i/003000/003113.png',
-		cooldown: 30,
-	},
+	// THE_SPEAR_EXPANDED_FROM_SPREAD: {
+	// 	id: 4422,
+	// 	name: 'Expanded Spear (held)',
+	// 	icon: 'https://xivapi.com/i/003000/003113.png',
+	// 	cooldown: 30,
+	// },
 
-	THE_EWER_EXPANDED_FROM_SPREAD: {
-		id: 4423,
-		name: 'Expanded Ewer (held)',
-		icon: 'https://xivapi.com/i/003000/003114.png',
-		cooldown: 30,
-	},
+	// THE_EWER_EXPANDED_FROM_SPREAD: {
+	// 	id: 4423,
+	// 	name: 'Expanded Ewer (held)',
+	// 	icon: 'https://xivapi.com/i/003000/003114.png',
+	// 	cooldown: 30,
+	// },
 
-	THE_SPIRE_EXPANDED_FROM_SPREAD: {
-		id: 4424,
-		name: 'Expanded Spire (held)',
-		icon: 'https://xivapi.com/i/003000/003115.png',
-		cooldown: 30,
-	},
+	// THE_SPIRE_EXPANDED_FROM_SPREAD: {
+	// 	id: 4424,
+	// 	name: 'Expanded Spire (held)',
+	// 	icon: 'https://xivapi.com/i/003000/003115.png',
+	// 	cooldown: 30,
+	// },
 
 	// -----
 	// OGCD Arcana removal
 	// -----
 
-	UNDRAW_SPREAD: {
-		id: 4646,
-		name: 'Undraw Spread',
-		icon: 'https://xivapi.com/i/003000/003149.png',
-		cooldown: 3,
-	},
+	// UNDRAW_SPREAD: {
+	// 	id: 4646,
+	// 	name: 'Undraw Spread',
+	// 	icon: 'https://xivapi.com/i/003000/003149.png',
+	// 	cooldown: 3,
+	// },
 
-	EMPTY_ROAD: {
-		id: 4645,
-		name: 'Empty Road',
-		icon: 'https://xivapi.com/i/003000/003148.png',
-		cooldown: 3,
-	},
+	// EMPTY_ROAD: {
+	// 	id: 4645,
+	// 	name: 'Empty Road',
+	// 	icon: 'https://xivapi.com/i/003000/003148.png',
+	// 	cooldown: 3,
+	// },
 
-	UNDRAW: {
-		id: 9629,
-		name: 'Undraw',
-		icon: 'https://xivapi.com/i/003000/003108.png',
-		cooldown: 3,
-	},
 }
