@@ -45,15 +45,15 @@ export default new Meta({
 	],
 	changelog: [
 		{
-			date: new Date('2019-07-09'),
+			date: new Date('2019-07-11'),
 			Changes: () => <>
-				<strong>Early support for Shadowbringers</strong>:
+				<strong>Basic support for Shadowbringers</strong>:
 				<ul>
 					<li>(<ActionLink {...ACTIONS.COMBUST_III} />) DoT update</li>
 					<li>(<ActionLink {...ACTIONS.UNDRAW} />) Using it triggers suggestion not to use it</li>
 					<li>(<ActionLink {...ACTIONS.LUCID_DREAMING} />, <ActionLink {...ACTIONS.LIGHTSPEED} />) Message update</li>
-					<li>(<ActionLink {...ACTIONS.DRAW} />, <ActionLink {...ACTIONS.SLEEVE_DRAW} />) Uptime tracking</li>
-					<li>(<ActionLink {...ACTIONS.HOROSCOPE} />, <ActionLink {...ACTIONS.SLEEVE_DRAW} />) Failing to read the cards again triggers suggestion</li>
+					<li>(<ActionLink {...ACTIONS.HOROSCOPE} />) Failing to read the cards again triggers suggestion</li>
+					<li>(<ActionLink {...ACTIONS.PLAY} />) Coming soon™</li>
 				</ul>
 			</>,
 			contributors: [CONTRIBUTORS.SUSHIROU],

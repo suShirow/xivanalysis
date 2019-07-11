@@ -17,9 +17,14 @@ import {PLAY} from './ArcanaGroups'
 // perhaps go for displaying 11 out of 10 plays used, since prepull draw can be optional?
 // Track them using Draw when they still have a minor arcana (oopsie) or a card in the spread
 
-const CARD_DURATION = 1500
+const CARD_DURATION = 15000
 const SLEEVE_DRAW_PLAYS_GIVEN = 3
 const SLEEVE_DRAW_CD_REDUCTION = 27
+const DRAW_CD_REFUND_PER_SLEEVE_PLAY = 3000
+const DRAW_CD_REFUND_PER_REDRAW_DURING_SLEEVE = 3000
+
+const WARN_TARGET_MAX_PLAYS = 2
+const FAIL_TARGET_MAX_PLAYS = 3
 
 const SEVERITIES = {
 	CARD_HOLDING: {
@@ -49,7 +54,8 @@ export default class Draw extends Module {
 
 	_plays = 0
 
-	_sleeveStacks: 0 | 1 | 2 = 0
+// tslint:disable-next-line: no-magic-numbers
+	_sleeveResets: 0 | 1 | 2 | 3 = 0
 	_sleeveUses = 0
 	_sleeveOverwriteTime = 0
 
@@ -67,14 +73,18 @@ export default class Draw extends Module {
 			// The first use, take holding as from the start of the fight
 			this._drawDrift = event.timestamp - this.parser.fight.start_time
 
-		} else if (this._sleeveStacks > 0) {
-			this._sleeveStacks--
+			console.log(this.parser.formatDuration(this._drawDrift))
+		} else if (this._sleeveResets > 0) {
+			this._sleeveResets--
 			this.cooldowns.reduceCooldown(ACTIONS.DRAW.id, SLEEVE_DRAW_CD_REDUCTION)
 			// Take holding as from the time it comes off cooldown, but it was a 3s cd
 			this._drawDrift = event.timestamp - this._lastDrawTimestamp - ((ACTIONS.DRAW.cooldown - SLEEVE_DRAW_CD_REDUCTION) * 1000)
+			console.log(this.parser.formatDuration(this._drawDrift))
+
 		} else {
 			// Take holding as from the time it comes off cooldown
 			this._drawDrift = event.timestamp - this._lastDrawTimestamp - (ACTIONS.DRAW.cooldown * 1000)
+			console.log(this.parser.formatDuration(this._drawDrift))
 		}
 
 		// Keep track of total drift time not using Draw
@@ -92,7 +102,7 @@ export default class Draw extends Module {
 
 	private _onSleeveDraw(event: CastEvent) {
 		this.cooldowns.resetCooldown(ACTIONS.DRAW.id)
-		this._sleeveStacks = 2
+		this._sleeveResets = SLEEVE_DRAW_PLAYS_GIVEN
 		this._sleeveUses++
 
 		this._sleeveOverwriteTime += (event.timestamp - this._lastDrawTimestamp)
@@ -100,7 +110,7 @@ export default class Draw extends Module {
 	}
 
 	private _onComplete() {
-
+		console.log(this._plays)
 		// Max plays:
 		// [(fight time / 30s draw time) - 1 if fight time doesn't end between xx:05-xx:29s, and xx:45-xx:60s]
 		// eg 7:00: 14 -1 = 13  draws by default. 7:17 fight time would mean 14 draws, since they can play the last card at least.
@@ -112,20 +122,24 @@ export default class Draw extends Module {
 
 		// Begin Theoretical Max Plays calc
 		const fightDuration = this.parser.fight.end_time - this.parser.fight.start_time
-		const sleeveCounts = Math.floor((fightDuration - CARD_DURATION) / (ACTIONS.SLEEVE_DRAW.cooldown * 1000))
-
+		const sleeveCounts = Math.floor((fightDuration - CARD_DURATION) / (ACTIONS.SLEEVE_DRAW.cooldown * 1000)) + 1
 		const playsFromSleeveDraw = sleeveCounts * SLEEVE_DRAW_PLAYS_GIVEN
-		const playsFromDraw = Math.floor((fightDuration - CARD_DURATION) / (ACTIONS.DRAW.cooldown * 1000))
+		console.log(playsFromSleeveDraw)
 
-		const theoreticalMaxPlays = playsFromDraw + playsFromSleeveDraw + 1
+		const playsFromDraw = Math.floor((fightDuration - CARD_DURATION - (sleeveCounts * DRAW_CD_REFUND_PER_SLEEVE_PLAY)) / (ACTIONS.DRAW.cooldown * 1000))
+
+		const theoreticalMaxPlays = playsFromDraw + playsFromSleeveDraw
+		console.log(theoreticalMaxPlays)
 		// TODO: Need to account for resetting draw CD everytime sleeve plays
 		// TODO: Include downtime calculation for each fight??
+		// TODO: Calcultae more accurately baed on Redraw uses
+		// TODO: Suggest how to redraw effectively (maybe in ArcanaSuggestions)
 
 		/*
 			CHECKLIST: Number of cards played
 		*/
-		const warnTarget = (theoreticalMaxPlays - 1 / theoreticalMaxPlays) * 100
-		const failTarget = (theoreticalMaxPlays - 2 / theoreticalMaxPlays) * 100
+		const warnTarget = (theoreticalMaxPlays - WARN_TARGET_MAX_PLAYS / theoreticalMaxPlays) * 100
+		const failTarget = (theoreticalMaxPlays - FAIL_TARGET_MAX_PLAYS / theoreticalMaxPlays) * 100
 		this.checklist.add(new TieredRule({
 			name: <Trans id="ast.draw.checklist.name">
 				Play as many cards as possible
@@ -148,20 +162,21 @@ export default class Draw extends Module {
 
 		/*
 			SUGGESTION: Didn't keep draw on cooldown
+			TODO: Displays a lot of extra due to Sleeve and redraw resetting CD - need to account for this
 		*/
-		const drawUsesMissed = Math.floor((this._drawTotalDrift) / (ACTIONS.DRAW.cooldown * 1000))
-		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.DRAW.icon,
-			content: <Trans id="ast.draw.suggestions.draws-missed.content">
-				Keep <ActionLink {...ACTIONS.DRAW} /> on cooldown
-			</Trans>,
-			why: <Trans id="ast.draw.suggestions.draws-missed.why">
-				<Plural value={drawUsesMissed} one="# Draw" other="# Draws" />
-					lost from holding it for {this.parser.formatDuration(this._drawTotalDrift)}
-			</Trans>,
-			tiers: SEVERITIES.CARD_HOLDING,
-			value: this._drawTotalDrift,
-		}))
+		// const drawUsesMissed = Math.floor((this._drawTotalDrift) / (ACTIONS.DRAW.cooldown * 1000))
+		// this.suggestions.add(new TieredSuggestion({
+		// 	icon: ACTIONS.DRAW.icon,
+		// 	content: <Trans id="ast.draw.suggestions.draws-missed.content">
+		// 		Keep <ActionLink {...ACTIONS.DRAW} /> on cooldown
+		// 	</Trans>,
+		// 	why: <Trans id="ast.draw.suggestions.draws-missed.why">
+		// 		<Plural value={drawUsesMissed} one="# Draw" other="# Draws" />
+		// 			lost from holding it for {this.parser.formatDuration(this._drawTotalDrift)}
+		// 	</Trans>,
+		// 	tiers: SEVERITIES.CARD_HOLDING,
+		// 	value: this._drawTotalDrift,
+		// }))
 
 		/*
 			SUGGESTION: Didn't use sleeve draw at all
@@ -180,21 +195,22 @@ export default class Draw extends Module {
 		} else {
 			/*
 				SUGGESTION: Sleevedraw overwrote draw (or not used right after draw?)
+				TODO: Not calculating missed draws properly. Maybe should be checking within x seconds of using draw
 			*/
-			const drawOverwrites = (this._sleeveOverwriteTime) / (ACTIONS.DRAW.cooldown * 1000)
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.SLEEVE_DRAW.icon,
-				content: <Trans id="ast.draw.suggestions.sleeve-overwrite.content">
-						<ActionLink {...ACTIONS.SLEEVE_DRAW} /> restarts the cooldown on <ActionLink {...ACTIONS.DRAW} />,
-						so it is better to use it right after a Draw.
-				</Trans>,
-				why: <Trans id="ast.draw.suggestions.sleeve-overwrite.why">
-					<Plural value={drawOverwrites} one="# Draw" other="# Draws" />
-						lost by having their cooldowns reset by Sleeve Draw. A total of {this.parser.formatDuration(this._sleeveOverwriteTime)} of Draw cooldown time was overwritten by Sleeve Draw.
-				</Trans>,
-				tiers: SEVERITIES.SLEEVE_DRAW_OVERWRITE,
-				value: this._sleeveOverwriteTime,
-			}))
+			// const drawOverwrites = (this._sleeveOverwriteTime) / (ACTIONS.DRAW.cooldown * 1000)
+			// this.suggestions.add(new TieredSuggestion({
+			// 	icon: ACTIONS.SLEEVE_DRAW.icon,
+			// 	content: <Trans id="ast.draw.suggestions.sleeve-overwrite.content">
+			// 			<ActionLink {...ACTIONS.SLEEVE_DRAW} /> restarts the cooldown on <ActionLink {...ACTIONS.DRAW} />,
+			// 			so it is better to use it right after a Draw.
+			// 	</Trans>,
+			// 	why: <Trans id="ast.draw.suggestions.sleeve-overwrite.why">
+			// 		<Plural value={drawOverwrites} one="# Draw" other="# Draws" />
+			// 			lost by having their cooldowns reset by Sleeve Draw. A total of {this.parser.formatDuration(this._sleeveOverwriteTime)} of Draw cooldown time was overwritten by Sleeve Draw.
+			// 	</Trans>,
+			// 	tiers: SEVERITIES.SLEEVE_DRAW_OVERWRITE,
+			// 	value: this._sleeveOverwriteTime,
+			// }))
 		}
 
 	}

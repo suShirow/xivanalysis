@@ -5,22 +5,11 @@ export default class Cooldowns extends CoreCooldowns {
 	static cooldownOrder = [
 		ACTIONS.DRAW.id,
 		// oGCD ST heals
-		{
-			name: 'Single Target OGCD Heals',
-			actions: [
-				ACTIONS.ESSENTIAL_DIGNITY.id,
-				ACTIONS.CELESTIAL_INTERSECTION.id,
-			],
-		},
+		ACTIONS.ESSENTIAL_DIGNITY.id,
+		ACTIONS.CELESTIAL_INTERSECTION.id,
 		// oGCD AoE heals
-		{
-			name: 'AoE OGCD Heals',
-			merge: true,
-			actions: [
-				ACTIONS.EARTHLY_STAR.id,
-				ACTIONS.CELESTIAL_OPPOSITION.id,
-			],
-		},
+		ACTIONS.EARTHLY_STAR.id,
+		ACTIONS.CELESTIAL_OPPOSITION.id,
 		// Horoscope
 		{
 			name: 'Horoscope',
