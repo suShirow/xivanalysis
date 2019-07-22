@@ -6,6 +6,7 @@ import Lightspeed from './Lightspeed'
 import LucidDreaming from './LucidDreaming'
 import ArcanaUndrawUsage from './ArcanaUndrawUsage'
 import Horoscope from './Horoscope'
+import Sect from './Sect'
 // import ArcanaTracking from './ArcanaTracking'
 // import ArcanaSuggestions from './ArcanaSuggestions'
 
@@ -20,4 +21,5 @@ export default [
 	Horoscope,
 	// ArcanaTracking,
 	// ArcanaSuggestions,
+	Sect,
 ]
