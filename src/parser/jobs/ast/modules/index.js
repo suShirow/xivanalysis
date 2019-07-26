@@ -9,6 +9,8 @@ import Horoscope from './Horoscope'
 // import ArcanaTracking from './ArcanaTracking'
 // import ArcanaSuggestions from './ArcanaSuggestions'
 import Sect from './Sect'
+import CelestialIntersection from './CelestialIntersection'
+import Overheal from './Overheal'
 
 export default [
 	Cooldowns,
@@ -22,4 +24,6 @@ export default [
 	// ArcanaTracking,
 	// ArcanaSuggestions,
 	Sect,
+	CelestialIntersection,
+	Overheal,
 ]
