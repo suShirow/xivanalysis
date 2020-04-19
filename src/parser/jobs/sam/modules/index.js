@@ -10,6 +10,8 @@ import Meikyo from './Meikyo'
 import ThirdEye from './ThirdEye'
 import Tsubame from './Tsubame'
 import OGCDDowntime from './OGCDDowntime'
+import SamInterrupts from './SamInterrupts'
+import Shoha from './Shoha'
 import Statuses from './Statuses'
 
 export default [
@@ -25,5 +27,7 @@ export default [
 	ThirdEye,
 	Tsubame,
 	OGCDDowntime,
+	SamInterrupts,
+	Shoha,
 	Statuses,
 ]

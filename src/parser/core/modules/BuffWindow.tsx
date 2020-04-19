@@ -3,30 +3,34 @@ import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {RotationTable, RotationTableNotesMap, RotationTableTargetData} from 'components/ui/RotationTable'
-import ACTIONS from 'data/ACTIONS'
-import {Action} from 'data/ACTIONS/ACTIONS'
+import {Action} from 'data/ACTIONS'
 import {getDataBy} from 'data/getDataBy'
-import {Status} from 'data/STATUSES/STATUSES'
+import {Status} from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import GlobalCooldown from 'parser/core/modules/GlobalCooldown'
 import Suggestions, {TieredSuggestion} from 'parser/core/modules/Suggestions'
-import Timeline from 'parser/core/modules/Timeline'
+import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
+import {Data} from './Data'
 
 export class BuffWindowState {
 	start: number
 	end?: number
 	rotation: CastEvent[] = []
 
-	constructor(start: number) {
+	private data: Data
+
+	constructor(data: Data, start: number) {
+		this.data = data
 		this.start = start
 	}
 
 	get gcds(): number {
+		// TODO: Investigate removing the reliance on data here.
 		return this.rotation
-			.map(e => getDataBy(ACTIONS, 'id', e.ability.guid) as TODO)
+			.map(e => this.data.getAction(e.ability.guid))
 			.filter(a => a && a.onGcd)
 			.length
 	}
@@ -42,7 +46,7 @@ interface SeverityTiers {
 	[key: number]: number
 }
 
-interface BuffWindowExpectedGCDs {
+export interface BuffWindowExpectedGCDs {
 	expectedPerWindow: number
 	suggestionContent: JSX.Element | string
 	severityTiers: SeverityTiers
@@ -115,9 +119,10 @@ export abstract class BuffWindowModule extends Module {
 	 */
 	protected rotationTableNotesColumnHeader?: JSX.Element
 
+	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
-	@dependency private globalCooldown!: GlobalCooldown
+	@dependency protected globalCooldown!: GlobalCooldown
 
 	private buffWindows: BuffWindowState[] = []
 
@@ -131,13 +136,13 @@ export abstract class BuffWindowModule extends Module {
 
 	protected init() {
 		this.addHook('cast', {by: 'player'}, this.onCast)
-		this.addHook('applybuff', {by: 'player'}, this.onApplyBuff)
-		this.addHook('removebuff', {by: 'player'}, this.onRemoveBuff)
+		this.addHook('applybuff', {to: 'player'}, this.onApplyBuff)
+		this.addHook('removebuff', {to: 'player'}, this.onRemoveBuff)
 		this.addHook('complete', this.onComplete)
 	}
 
 	private onCast(event: CastEvent) {
-		const action: Action | undefined = getDataBy(ACTIONS, 'id', event.ability.guid)
+		const action = this.data.getAction(event.ability.guid)
 
 		if (!action || action.autoAttack) {
 			// Disregard auto attacks for tracking rotations / events during buff windows
@@ -167,7 +172,7 @@ export abstract class BuffWindowModule extends Module {
 	}
 
 	private startNewBuffWindow(startTime: number) {
-		this.buffWindows.push(new BuffWindowState(startTime))
+		this.buffWindows.push(new BuffWindowState(this.data, startTime))
 	}
 
 	private onRemoveBuff(event: BuffEvent) {
@@ -313,7 +318,7 @@ export abstract class BuffWindowModule extends Module {
 		if ( this.trackedActions ) {
 			const missedActions = this.trackedActions.actions
 				.reduce((sum, trackedAction) => sum + this.buffWindows
-						.reduce((sum, buffWindow) => sum + Math.max(0, trackedAction.expectedPerWindow - buffWindow.getActionCountByIds([trackedAction.action.id])), 0), 0)
+						.reduce((sum, buffWindow) => sum + Math.max(0, this.getBuffWindowExpectedTrackedActions(buffWindow, trackedAction) - buffWindow.getActionCountByIds([trackedAction.action.id])), 0), 0)
 
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.trackedActions.icon,
@@ -321,7 +326,7 @@ export abstract class BuffWindowModule extends Module {
 				tiers: this.trackedActions.severityTiers,
 				value: missedActions,
 				why: <Trans id="core.buffwindow.suggestions.trackedaction.why">
-					<Plural value={missedActions} one="# use of a recommended cooldown was" other="# uses of recommended cooldowns were"/> missed during {this.buffAction.name} windows.
+					<Plural value={missedActions} one="# use of a recommended action was" other="# uses of recommended actions were"/> missed during {this.buffAction.name} windows.
 				</Trans>,
 			}))
 		}
@@ -337,7 +342,7 @@ export abstract class BuffWindowModule extends Module {
 				tiers: this.trackedBadActions.severityTiers,
 				value: badActions,
 				why: <Trans id="core.buffwindow.suggestions.trackedbadaction.why">
-					<Plural value={badActions} one="# use of" other="# uses of"/> cooldowns that should be avoided during {this.buffAction.name} windows.
+					<Plural value={badActions} one="# use of" other="# uses of"/> actions that should be avoided during {this.buffAction.name} windows.
 				</Trans>,
 			}))
 		}

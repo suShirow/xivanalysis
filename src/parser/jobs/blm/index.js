@@ -25,11 +25,11 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.0',
-		to: '5.1',
+		to: '5.2',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.FURST, role: ROLES.MAINTAINER},
-		{user: CONTRIBUTORS.LAQI, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.LAQI, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.AKAIRYU, role: ROLES.DEVELOPER},
 	],
 	changelog: [{

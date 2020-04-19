@@ -20,8 +20,8 @@ export default new Meta({
 		</Message>
 	</>,
 	supportedPatches: {
-		from: '5.05',
-		to: '5.08',
+		from: '5.1',
+		to: '5.2',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.LEYLIA, role: ROLES.MAINTAINER},
@@ -30,6 +30,26 @@ export default new Meta({
 	],
 
 	changelog: [
+		{
+			date: new Date('2020-02-27'),
+			Changes: () => <>Added Verstone and Verfire procs to the Timeline</>,
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2020-02-26'),
+			Changes: () => <>Bump up supported version to 5.2</>,
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2020-01-02'),
+			Changes: () => <>Adjusted Cooldown Downtime handling based on 3-8 Standard opener</>,
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2019-11-03'),
+			Changes: () => <>Added basic support for 5.1.  Resolved issue with manafication overcap statistic</>,
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
 		{
 			date: new Date('2019-08-12'),
 			Changes: () => <>Added handling for Displacement/engagement and Corps-a-corps related to manafication.  Removed manafication from overcap suggestion, added it as 2 small statistics.</>,

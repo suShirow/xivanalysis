@@ -1,5 +1,5 @@
 import {t} from '@lingui/macro'
-import {Trans, Plural} from '@lingui/react'
+import {Trans} from '@lingui/react'
 import Color from 'color'
 import _ from 'lodash'
 import React from 'react'
@@ -9,7 +9,6 @@ import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import {ActionLink} from 'components/ui/DbLink'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 import kenkiIcon from './kenki.png'
@@ -25,7 +24,6 @@ const KENKI_ACTIONS = {
 	[ACTIONS.YUKIKAZE.id]: {combo: 10},
 	[ACTIONS.GEKKO.id]: {combo: 5, positional: 5},
 	[ACTIONS.KASHA.id]: {combo: 5, positional: 5},
-	[ACTIONS.AGEHA.id]: {cast: 10}, // cast 10, kill 20
 
 	// aoe
 	[ACTIONS.FUGA.id]: {cast: 5},
@@ -177,17 +175,6 @@ export default class Kenki extends Module {
 				35: SEVERITY.MAJOR,
 			},
 		}))
-
-		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.HISSATSU_GUREN.icon,
-			content: <Trans id = "sam.kenki.suggestion.badguren.content"> Avoid using <ActionLink {...ACTIONS.HISSATSU_GUREN}/> when you only have one target, as <ActionLink {...ACTIONS.HISSATSU_SENEI}/> has higher potency and can be used for the same cost. </Trans>,
-			why: <Trans id = "sam.kenki.suggestion.badguren.why"><Plural value={this._badGurens} one="# use" other="# uses"/> of Guren hit a single target</Trans>,
-			value: this._badGurens,
-			tiers: {
-				1: SEVERITY.MEDIUM,
-				2: SEVERITY.MAJOR,
-			},
-		}))
 	}
 
 	output() {
@@ -208,8 +195,8 @@ export default class Kenki extends Module {
 				label: 'Maximum',
 				data: this._history.max,
 				steppedLine: true,
-				backgroundColor: sam.fade(0.5),
-				borderColor: sam.fade(0.2),
+				backgroundColor: sam.fade(0.5).toString(),
+				borderColor: sam.fade(0.2).toString(),
 				fill: '-1',
 				pointRadius: 0,
 				pointHitRadius: 10,
