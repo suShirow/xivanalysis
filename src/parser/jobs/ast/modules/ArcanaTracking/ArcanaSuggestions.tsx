@@ -4,7 +4,7 @@ import {ActionLink} from 'components/ui/DbLink'
 import JobIcon from 'components/ui/JobIcon'
 import {getDataBy} from 'data'
 import JOBS from 'data/JOBS'
-import {ActorType} from 'fflogs'
+import {ActorType, isCastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
 import {Timeline} from 'parser/core/modules/Timeline'
@@ -93,6 +93,11 @@ export default class ArcanaSuggestions extends Module {
 			}
 			return cardLog
 		})
+		console.log(combatants)
+		console.log(this.cardLogs)
+		console.log(this.cardLogs.filter(artifact => {
+			return isCastEvent(artifact.lastEvent) && artifact.lastEvent.ability.guid === this.data.actions.DIVINATION.id
+		}))
 	}
 
 	output() {

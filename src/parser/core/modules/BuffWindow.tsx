@@ -347,7 +347,7 @@ export abstract class BuffWindowModule extends Module {
 				tiers: this.trackedActions.severityTiers,
 				value: missedActions,
 				why: <Trans id="core.buffwindow.suggestions.trackedaction.why">
-					<Plural value={missedActions} one="# use of a recommended action was" other="# uses of recommended actions were"/> missed during {this.buffAction.name} windows.
+					<Plural value={missedActions} one="# use of a recommended waction was" other="# uses of recommended actions were"/> missed during {this.buffAction.name} windows.
 				</Trans>,
 			}))
 		}

@@ -1,5 +1,6 @@
 export default {
 	DRAW_CHECKLIST: 40,
+	DIVINATION: 51,
 	LIGHTSPEED: 52,
 	ARCANA_TRACKING: 55,
 }
